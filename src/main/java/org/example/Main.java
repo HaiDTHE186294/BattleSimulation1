@@ -68,10 +68,17 @@ public class Main {
                 target = findTarget(current, cm);
             }
 
+            if (target == null || !target.isAlive()) {
+                System.out.println("No valid target available.");
+                cm.endTurn();
+                continue;
+            }
+
             if (playerTeam.contains(current)) {
                 // Người chơi chọn hành động
                 System.out.println("1. Attack");
                 System.out.println("2. Use Item");
+                System.out.println("3. Effects");
                 System.out.print("Choose action: ");
                 int choice = Integer.parseInt(scanner.nextLine());
 
@@ -93,6 +100,11 @@ public class Main {
                             Weapon selected = weapons.get(wIndex);
                             cm.useEquipment(target, selected);
                         }
+                        break;
+                    case 3:
+                        BurnEffect burnEffect = new BurnEffect(2, 3);
+                        effectService.applyEffect(target, burnEffect);
+                        System.out.println(target.getName() + " bị thiêu đốt!");
                         break;
 
                     default:

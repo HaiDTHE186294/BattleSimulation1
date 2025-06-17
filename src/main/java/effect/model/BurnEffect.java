@@ -22,6 +22,5 @@ public class BurnEffect extends AbstractEffect {
 
         System.out.println(target.getName() + " nhận " + damagePerTurn + " sát thương từ thiêu đốt.");
         target.takeDamage(damagePerTurn);
-        reduceDuration();
     }
 }

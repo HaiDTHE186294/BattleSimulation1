@@ -12,6 +12,8 @@ public class EffectService {
     public void applyEffect(Soldier target, Effect effect) {
         target.getActiveEffects().add(effect);
         effect.apply(target);
+        effect.onTurnStart(target);
+        effect.reduceDuration(); // Giảm thời gian hiệu ứng ngay khi áp dụng
     }
 
     // Cập nhật các hiệu ứng theo lượt
@@ -21,6 +23,7 @@ public class EffectService {
             effect.reduceDuration();
             if (effect.isExpired()) {
                 effect.onExpire(target);
+                System.out.println("Hiệu ứng " + effect.getName() + " đã hết hạn trên " + target.getName());
                 return true; // remove
             }
             return false;
@@ -40,5 +43,16 @@ public class EffectService {
             e.onExpire(target);
         }
         target.getActiveEffects().clear();
+    }
+
+    // Kích hoạt hiệu ứng khi bắt đầu lượt
+    public void activateEffects(Soldier target) {
+        if (target == null || !target.isAlive()) return;
+
+        for (Effect effect : target.getActiveEffects()) {
+            if (!effect.isExpired()) {
+                effect.onTurnStart(target);
+            }
+        }
     }
 }

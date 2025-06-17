@@ -1,5 +1,6 @@
 package person.model;
 
+import effect.model.Effect;
 import equipment.model.IComponent;
 import equipment.model.StatModifier;
 import equipment.model.Weapon;
@@ -14,6 +15,7 @@ public class Soldier extends Person {
     private int baseDef;
     private final List<IComponent> equipmentList;
     private final List<GameObserver> observers;
+    private final List<Effect> activeEffects; // Giới hạn số lượng trang bị
 
     public Soldier(String name, int health, PersonStatus status, int baseAtk, int baseDef) {
         super(name, health, status);
@@ -21,6 +23,7 @@ public class Soldier extends Person {
         this.baseDef = baseDef;
         this.equipmentList = new ArrayList<>();
         this.observers = new ArrayList<>();
+        this.activeEffects = new ArrayList<>();
     }
 
 
@@ -118,5 +121,9 @@ public class Soldier extends Person {
                 .filter(i -> i instanceof Weapon)
                 .map(i -> (Weapon) i)
                 .toList();
+    }
+
+    public List<Effect> getActiveEffects() {
+        return activeEffects;
     }
 }

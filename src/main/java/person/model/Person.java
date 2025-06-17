@@ -94,7 +94,7 @@ public abstract class Person {
 
     public void removeEffect(Effect effect) {
         if (activeEffects.remove(effect)) {
-            activeEffects.remove(this);
+            activeEffects.remove(effect);
             System.out.println(getName() + " đã loại bỏ hiệu ứng " + effect.getName());
         }
     }
