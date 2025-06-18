@@ -140,61 +140,83 @@ public class MainFrame extends JFrame implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        // Nếu có log mới
-        if (arg instanceof String && ((String) arg).length() > 0) {
-            logArea.append((String) arg + "\n");
+        updateLog(arg);
+        Soldier cur = cm.getCurrentSoldier();
+        boolean isPlayer = isPlayerTurn(cur);
+
+        updateTeamPanels();
+        updateTargetBox(cur);
+        updateBuffTargetBox(cur);
+        updateItemBox(cur);
+
+        updateCombatStatus(cur, isPlayer);
+    }
+
+    private void updateLog(Object arg) {
+        if (arg instanceof String s && !s.isEmpty()) {
+            logArea.append(s + "\n");
             logArea.setCaretPosition(logArea.getDocument().getLength());
         }
-        // Update toàn bộ UI
-        Soldier cur = cm.getCurrentSoldier();
-        boolean isPlayer = (cur != null && cm.getPlayerTeam().contains(cur));
+    }
 
-        // Update team panels
+    private boolean isPlayerTurn(Soldier cur) {
+        return cur != null && cm.getPlayerTeam().contains(cur);
+    }
+
+    private void updateTeamPanels() {
         updateTeamPanel(playerPanel, cm.getPlayerTeam(), true);
         updateTeamPanel(enemyPanel, cm.getEnemyTeam(), false);
+    }
 
-        // Cập nhật targetBox đối phương
+    private void updateTargetBox(Soldier cur) {
         targetBox.removeAllItems();
-        if (cur != null) {
-            List<Soldier> targets = cm.getPlayerTeam().contains(cur)
-                    ? controller.getAlive(cm.getEnemyTeam())
-                    : controller.getAlive(cm.getPlayerTeam());
-            for (Soldier s : targets) targetBox.addItem(s.getName());
-        }
+        if (cur == null) return;
+        List<Soldier> targets = cm.getPlayerTeam().contains(cur)
+                ? controller.getAlive(cm.getEnemyTeam())
+                : controller.getAlive(cm.getPlayerTeam());
+        for (Soldier s : targets) targetBox.addItem(s.getName());
+    }
 
-        // Cập nhật buffTargetBox (đồng đội)
+    private void updateBuffTargetBox(Soldier cur) {
         buffTargetBox.removeAllItems();
-        if (cur != null && cm.getPlayerTeam().contains(cur)) {
-            List<Soldier> allies = controller.getAlive(cm.getPlayerTeam());
-            for (Soldier s : allies) buffTargetBox.addItem(s.getName());
+        if (isPlayerTurn(cur)) {
+            for (Soldier s : controller.getAlive(cm.getPlayerTeam()))
+                buffTargetBox.addItem(s.getName());
         }
+    }
 
-        // Cập nhật itemBox
+    private void updateItemBox(Soldier cur) {
         itemBox.removeAllItems();
-        if (cur != null && cm.getPlayerTeam().contains(cur)) {
-            for (Weapon w : cur.getWeapons()) itemBox.addItem(w.getName());
+        if (isPlayerTurn(cur)) {
+            for (Weapon w : cur.getWeapons())
+                itemBox.addItem(w.getName());
         }
+    }
 
-        // Update trạng thái trận đấu
+    private void updateCombatStatus(Soldier cur, boolean isPlayer) {
         if (cm.isCombatEnded()) {
-            attackBtn.setEnabled(false);
-            itemBtn.setEnabled(false);
-            effectBtn.setEnabled(false);
-            endTurnBtn.setEnabled(false);
-            if (cm.isPlayerWin()) {
-                combatStatusLabel.setText("You win!");
-            } else {
-                combatStatusLabel.setText("You fck off.");
-            }
+            setAllButtonsEnabled(false);
+            combatStatusLabel.setText(cm.isPlayerWin() ? "You win!" : "You fck off.");
             turnLabel.setText("Combat Ended.");
         } else {
             turnLabel.setText("Turn: " + (cur != null ? cur.getName() : "-"));
             combatStatusLabel.setText("");
-            attackBtn.setEnabled(isPlayer);
-            itemBtn.setEnabled(isPlayer);
-            effectBtn.setEnabled(isPlayer);
+            setActionButtonsEnabled(isPlayer);
             endTurnBtn.setEnabled(true);
         }
+    }
+
+    private void setAllButtonsEnabled(boolean enabled) {
+        attackBtn.setEnabled(enabled);
+        itemBtn.setEnabled(enabled);
+        effectBtn.setEnabled(enabled);
+        endTurnBtn.setEnabled(enabled);
+    }
+
+    private void setActionButtonsEnabled(boolean enabled) {
+        attackBtn.setEnabled(enabled);
+        itemBtn.setEnabled(enabled);
+        effectBtn.setEnabled(enabled);
     }
 
     private void updateTeamPanel(JPanel panel, List<Soldier> team, boolean isPlayer) {
