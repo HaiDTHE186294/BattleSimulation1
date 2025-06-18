@@ -1,5 +1,6 @@
 package person.model;
 
+import effect.model.BuffEffect;
 import effect.model.Effect;
 import equipment.model.IComponent;
 import equipment.model.StatModifier;
@@ -13,6 +14,8 @@ public class Soldier extends Person {
 
     private int baseAtk;
     private int baseDef;
+    private int currentAtk;
+    private int currentDef;
     private final List<IComponent> equipmentList;
     private final List<GameObserver> observers;
     private final List<Effect> activeEffects; // Giới hạn số lượng trang bị
@@ -62,23 +65,37 @@ public class Soldier extends Person {
 
     // Stat calculation
     public int getTotalAtk() {
-        int bonus = 0;
+        int result = baseAtk;
+        // Equipment bonus
         for (IComponent item : equipmentList) {
             if (item instanceof StatModifier statItem) {
-                bonus += statItem.getBonusAtk();
+                result += statItem.getBonusAtk();
             }
         }
-        return baseAtk + bonus;
+        // Buff bonus
+        for (Effect e : activeEffects) {
+            if (e instanceof BuffEffect buff && !buff.isExpired()) {
+                result += buff.getBonusAtk();
+            }
+        }
+        return result;
     }
 
     public int getTotalDef() {
-        int bonus = 0;
+        int result = baseDef;
+        // Equipment bonus
         for (IComponent item : equipmentList) {
             if (item instanceof StatModifier statItem) {
-                bonus += statItem.getBonusDef();
+                result += statItem.getBonusDef();
             }
         }
-        return baseDef + bonus;
+        // Buff bonus
+        for (Effect e : activeEffects) {
+            if (e instanceof BuffEffect buff && !buff.isExpired()) {
+                result += buff.getBonusDef();
+            }
+        }
+        return result;
     }
 
     // React to command
@@ -126,4 +143,5 @@ public class Soldier extends Person {
     public List<Effect> getActiveEffects() {
         return activeEffects;
     }
+
 }

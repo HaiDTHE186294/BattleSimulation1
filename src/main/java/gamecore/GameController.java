@@ -1,6 +1,7 @@
-package ui;
+package gamecore;
 
 import combat.CombatManager;
+import effect.model.BuffEffect;
 import effect.model.BurnEffect;
 import effect.service.EffectService;
 import equipment.model.Weapon;
@@ -83,6 +84,13 @@ public class GameController extends Observable {
         cm.endTurn();
         autoEnemyTurn();
         notifyAllState();
+    }
+
+    public void playerBuff(Soldier target) {
+        BuffEffect buffEffect = new BuffEffect("Buff ATK", 3, 10, 5);
+        cm.getEffectService().applyEffect(target, buffEffect);
+        notifyLog(target.getName() + " được buff!");
+        endTurnAndAutoEnemy();
     }
 
     // Tự động cho toàn bộ enemy đánh hết lượt

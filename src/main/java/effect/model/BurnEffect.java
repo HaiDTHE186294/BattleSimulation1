@@ -19,8 +19,9 @@ public class BurnEffect extends AbstractEffect {
     @Override
     public void onTurnStart(Person target) {
         if (isExpired()) return;
-
         System.out.println(target.getName() + " take " + damagePerTurn + " damage from burning.");
         target.takeDamage(damagePerTurn);
     }
+
+
 }

@@ -17,7 +17,8 @@ public class PersonService {
 
     public void performAttack(Soldier attacker, Soldier target) {
         int totalAtk = calculateTotalAtk(attacker);
-        target.takeDamage(totalAtk);
+        int totalDef = calculateTotalDef(target);
+        target.takeDamage(Math.max(totalAtk - totalDef, 0));
         notifyHealthChanged(target);
     }
 
@@ -27,14 +28,11 @@ public class PersonService {
     }
 
     public int calculateTotalAtk(Soldier soldier) {
-        int baseAtk = soldier.getBaseAtk();
-        int bonus = 0;
-        for (IComponent comp : soldier.getEquipmentList()) {
-            if (comp instanceof StatModifier stat) {
-                bonus += stat.getBonusAtk();
-            }
-        }
-        return baseAtk + bonus;
+        return soldier.getTotalAtk();
+    }
+
+    public int calculateTotalDef(Soldier soldier) {
+        return soldier.getTotalDef();
     }
 
     public void applyEffect(Soldier person, Effect effect) {

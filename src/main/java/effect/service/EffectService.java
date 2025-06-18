@@ -23,7 +23,7 @@ public class EffectService {
             effect.reduceDuration();
             if (effect.isExpired()) {
                 effect.onExpire(target);
-                System.out.println("Hiệu ứng " + effect.getName() + " đã hết hạn trên " + target.getName());
+                System.out.println("Effect " + effect.getName() + " was end on " + target.getName());
                 return true; // remove
             }
             return false;

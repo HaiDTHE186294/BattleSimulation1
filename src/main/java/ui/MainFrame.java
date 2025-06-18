@@ -2,6 +2,7 @@ package ui;
 
 import combat.CombatManager;
 import equipment.model.Weapon;
+import gamecore.GameController;
 import person.model.Soldier;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -12,15 +13,15 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class MainFrame extends JFrame implements Observer {
-    private final ui.GameController controller;
+    private final GameController controller;
     private final CombatManager cm;
     private JLabel turnLabel, combatStatusLabel;
     private JTextArea logArea;
     private JPanel playerPanel, enemyPanel;
-    private JButton attackBtn, itemBtn, effectBtn, endTurnBtn;
-    private JComboBox<String> targetBox, itemBox;
+    private JButton attackBtn, itemBtn, effectBtn, buffBtn, endTurnBtn;
+    private JComboBox<String> targetBox, itemBox, buffTargetBox;
 
-    public MainFrame(ui.GameController controller) {
+    public MainFrame(GameController controller) {
         this.controller = controller;
         this.cm = controller.getCombatManager();
         controller.addObserver(this);
@@ -68,6 +69,16 @@ public class MainFrame extends JFrame implements Observer {
         actionPanel.add(targetBox);
         actionPanel.add(Box.createVerticalStrut(12));
 
+        // Buff target selection (đồng đội)
+        JLabel buffTargetLabel = new JLabel("Chọn người buff:");
+        buffTargetLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        buffTargetBox = new JComboBox<>();
+        buffTargetBox.setMaximumSize(new Dimension(160, 25));
+        actionPanel.add(buffTargetLabel);
+        actionPanel.add(buffTargetBox);
+        actionPanel.add(Box.createVerticalStrut(10));
+
+
         // Item selection
         JLabel itemLabel = new JLabel("Chọn trang bị:");
         itemLabel.setFont(new Font("Arial", Font.BOLD, 14));
@@ -81,6 +92,7 @@ public class MainFrame extends JFrame implements Observer {
         attackBtn = new JButton("Tấn công");
         itemBtn = new JButton("Dùng trang bị");
         effectBtn = new JButton("Thiêu đốt");
+        buffBtn = new JButton("Buff đồng đội");
         endTurnBtn = new JButton("Kết thúc lượt");
 
         attackBtn.setMaximumSize(new Dimension(160, 36));
@@ -91,6 +103,7 @@ public class MainFrame extends JFrame implements Observer {
         itemBtn.setFont(new Font("Arial", Font.BOLD, 14));
         effectBtn.setFont(new Font("Arial", Font.BOLD, 14));
         endTurnBtn.setFont(new Font("Arial", Font.BOLD, 14));
+        buffBtn.setFont(new Font("Arial", Font.BOLD, 14));
 
         actionPanel.add(attackBtn);
         actionPanel.add(Box.createVerticalStrut(7));
@@ -99,6 +112,12 @@ public class MainFrame extends JFrame implements Observer {
         actionPanel.add(effectBtn);
         actionPanel.add(Box.createVerticalStrut(7));
         actionPanel.add(endTurnBtn);
+        actionPanel.add(Box.createVerticalStrut(7));
+        actionPanel.add(buffBtn);
+        actionPanel.add(Box.createVerticalStrut(7));
+
+
+
 
         add(actionPanel, BorderLayout.WEST);
 
@@ -112,6 +131,7 @@ public class MainFrame extends JFrame implements Observer {
         attackBtn.addActionListener(this::onAttack);
         itemBtn.addActionListener(this::onUseItem);
         effectBtn.addActionListener(this::onBurnEffect);
+        buffBtn.addActionListener(this::onBuff);
         endTurnBtn.addActionListener(e -> controller.playerEndTurn());
 
         update(null, null); // Initial update
@@ -133,13 +153,20 @@ public class MainFrame extends JFrame implements Observer {
         updateTeamPanel(playerPanel, cm.getPlayerTeam(), true);
         updateTeamPanel(enemyPanel, cm.getEnemyTeam(), false);
 
-        // Cập nhật targetBox
+        // Cập nhật targetBox đối phương
         targetBox.removeAllItems();
         if (cur != null) {
             List<Soldier> targets = cm.getPlayerTeam().contains(cur)
                     ? controller.getAlive(cm.getEnemyTeam())
                     : controller.getAlive(cm.getPlayerTeam());
             for (Soldier s : targets) targetBox.addItem(s.getName());
+        }
+
+        // Cập nhật buffTargetBox (đồng đội)
+        buffTargetBox.removeAllItems();
+        if (cur != null && cm.getPlayerTeam().contains(cur)) {
+            List<Soldier> allies = controller.getAlive(cm.getPlayerTeam());
+            for (Soldier s : allies) buffTargetBox.addItem(s.getName());
         }
 
         // Cập nhật itemBox
@@ -155,9 +182,9 @@ public class MainFrame extends JFrame implements Observer {
             effectBtn.setEnabled(false);
             endTurnBtn.setEnabled(false);
             if (cm.isPlayerWin()) {
-                combatStatusLabel.setText("🎉 You win!");
+                combatStatusLabel.setText("You win!");
             } else {
-                combatStatusLabel.setText("💀 You fck off.");
+                combatStatusLabel.setText("You fck off.");
             }
             turnLabel.setText("Combat Ended.");
         } else {
@@ -198,6 +225,21 @@ public class MainFrame extends JFrame implements Observer {
         return null;
     }
 
+    private void onBuff(ActionEvent e) {
+        Soldier buffTarget = getBuffTarget();
+        if (buffTarget != null) {
+            controller.playerBuff(buffTarget);
+        }
+    }
+
+    private Soldier getBuffTarget() {
+        String name = (String) buffTargetBox.getSelectedItem();
+        List<Soldier> allies = controller.getAlive(cm.getPlayerTeam());
+        for (Soldier s : allies) if (s.getName().equals(name)) return s;
+        return null;
+    }
+
+
     private Weapon getSelectedWeapon(Soldier cur) {
         String itemName = (String) itemBox.getSelectedItem();
         if (itemName == null) return null;
@@ -221,7 +263,7 @@ public class MainFrame extends JFrame implements Observer {
         if (cur == null || target == null) return;
         Weapon selected = getSelectedWeapon(cur);
         if (selected == null) {
-            JOptionPane.showMessageDialog(this, "Không tìm thấy trang bị.");
+            JOptionPane.showMessageDialog(this, "Item not found.");
             return;
         }
         controller.playerUseItem(cur, target, selected);
@@ -235,6 +277,6 @@ public class MainFrame extends JFrame implements Observer {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new MainFrame(new ui.GameController()));
+        SwingUtilities.invokeLater(() -> new MainFrame(new GameController()));
     }
 }
