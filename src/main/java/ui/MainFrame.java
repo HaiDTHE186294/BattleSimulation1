@@ -1,20 +1,17 @@
 package ui;
 
-import combat.CombatManager;
-import equipment.model.Weapon;
 import gamecore.GameController;
 import person.model.Soldier;
+import equipment.model.Weapon;
+
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-public class MainFrame extends JFrame implements Observer {
+public class MainFrame extends JFrame implements GameView, Observer {
     private final GameController controller;
-    private final CombatManager cm;
     private JLabel turnLabel, combatStatusLabel;
     private JTextArea logArea;
     private JPanel playerPanel, enemyPanel;
@@ -23,282 +20,211 @@ public class MainFrame extends JFrame implements Observer {
 
     public MainFrame(GameController controller) {
         this.controller = controller;
-        this.cm = controller.getCombatManager();
         controller.addObserver(this);
+        controller.setView(this);
 
-        setTitle("RPG Combat Demo (Modern UI)");
+        setTitle("RPG Combat Demo (MVC)");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(1020, 650);
         setLayout(new BorderLayout(10, 10));
 
-        // TOP: Turn label
-        turnLabel = new JLabel();
-        turnLabel.setFont(new Font("Arial", Font.BOLD, 28));
-        turnLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        add(turnLabel, BorderLayout.NORTH);
-
-        // CENTER: Main Info Panels
-        JPanel mainPanel = new JPanel(new GridLayout(1, 2, 20, 10));
-        playerPanel = new JPanel();
-        enemyPanel = new JPanel();
-        playerPanel.setBorder(new TitledBorder("Player Team"));
-        enemyPanel.setBorder(new TitledBorder("Enemy Team"));
-        mainPanel.add(playerPanel);
-        mainPanel.add(enemyPanel);
-        add(mainPanel, BorderLayout.CENTER);
-
-        // RIGHT: Combat log
-        logArea = new JTextArea(13, 38);
+        // --- Khởi tạo các thành phần UI ---
+        // Log area
+        logArea = new JTextArea(10, 40);
         logArea.setEditable(false);
-        logArea.setFont(new Font("Consolas", Font.PLAIN, 15));
         JScrollPane logScroll = new JScrollPane(logArea);
-        logScroll.setBorder(new TitledBorder("Combat Log"));
-        add(logScroll, BorderLayout.EAST);
 
-        // LEFT: Actions
-        JPanel actionPanel = new JPanel();
-        actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.Y_AXIS));
-        actionPanel.setBorder(new TitledBorder("Actions"));
+        // Thông tin trạng thái
+        turnLabel = new JLabel("Turn: ");
+        combatStatusLabel = new JLabel("Status: ");
 
-        // Target selection
-        JLabel targetLabel = new JLabel("Chọn mục tiêu:");
-        targetLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        targetBox = new JComboBox<>();
-        targetBox.setMaximumSize(new Dimension(160, 25));
-        actionPanel.add(targetLabel);
-        actionPanel.add(targetBox);
-        actionPanel.add(Box.createVerticalStrut(12));
-
-        // Buff target selection (đồng đội)
-        JLabel buffTargetLabel = new JLabel("Chọn người buff:");
-        buffTargetLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        buffTargetBox = new JComboBox<>();
-        buffTargetBox.setMaximumSize(new Dimension(160, 25));
-        actionPanel.add(buffTargetLabel);
-        actionPanel.add(buffTargetBox);
-        actionPanel.add(Box.createVerticalStrut(10));
-
-
-        // Item selection
-        JLabel itemLabel = new JLabel("Chọn trang bị:");
-        itemLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        itemBox = new JComboBox<>();
-        itemBox.setMaximumSize(new Dimension(160, 25));
-        actionPanel.add(itemLabel);
-        actionPanel.add(itemBox);
-        actionPanel.add(Box.createVerticalStrut(12));
-
-        // Action buttons
+        // Các nút và combobox
         attackBtn = new JButton("Tấn công");
-        itemBtn = new JButton("Dùng trang bị");
+        itemBtn = new JButton("Dùng vật phẩm");
         effectBtn = new JButton("Thiêu đốt");
-        buffBtn = new JButton("Buff đồng đội");
+        buffBtn = new JButton("Buff");
         endTurnBtn = new JButton("Kết thúc lượt");
 
-        attackBtn.setMaximumSize(new Dimension(160, 36));
-        itemBtn.setMaximumSize(new Dimension(160, 36));
-        effectBtn.setMaximumSize(new Dimension(160, 36));
-        endTurnBtn.setMaximumSize(new Dimension(160, 36));
-        attackBtn.setFont(new Font("Arial", Font.BOLD, 14));
-        itemBtn.setFont(new Font("Arial", Font.BOLD, 14));
-        effectBtn.setFont(new Font("Arial", Font.BOLD, 14));
-        endTurnBtn.setFont(new Font("Arial", Font.BOLD, 14));
-        buffBtn.setFont(new Font("Arial", Font.BOLD, 14));
+        targetBox = new JComboBox<>();
+        itemBox = new JComboBox<>();
+        buffTargetBox = new JComboBox<>();
 
-        actionPanel.add(attackBtn);
-        actionPanel.add(Box.createVerticalStrut(7));
-        actionPanel.add(itemBtn);
-        actionPanel.add(Box.createVerticalStrut(7));
-        actionPanel.add(effectBtn);
-        actionPanel.add(Box.createVerticalStrut(7));
-        actionPanel.add(endTurnBtn);
-        actionPanel.add(Box.createVerticalStrut(7));
-        actionPanel.add(buffBtn);
-        actionPanel.add(Box.createVerticalStrut(7));
+        // Panels hiển thị đội
+        playerPanel = new JPanel();
+        playerPanel.setBorder(BorderFactory.createTitledBorder("Đội bạn"));
+        playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.Y_AXIS));
 
+        enemyPanel = new JPanel();
+        enemyPanel.setBorder(BorderFactory.createTitledBorder("Đội địch"));
+        enemyPanel.setLayout(new BoxLayout(enemyPanel, BoxLayout.Y_AXIS));
 
+        // Panel điều khiển
+        JPanel controlPanel = new JPanel(new GridLayout(3, 2, 5, 5));
+        controlPanel.add(new JLabel("Chọn mục tiêu:"));
+        controlPanel.add(targetBox);
+        controlPanel.add(attackBtn);
+        controlPanel.add(itemBtn);
+        controlPanel.add(effectBtn);
+        controlPanel.add(endTurnBtn);
 
+        // Panel buff riêng (nếu muốn)
+        JPanel buffPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        buffPanel.add(new JLabel("Buff cho đồng đội:"));
+        buffPanel.add(buffTargetBox);
+        buffPanel.add(buffBtn);
 
-        add(actionPanel, BorderLayout.WEST);
+        // Panel dưới cùng: log và trạng thái
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.add(logScroll, BorderLayout.CENTER);
+        JPanel statusPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        statusPanel.add(turnLabel);
+        statusPanel.add(combatStatusLabel);
+        bottomPanel.add(statusPanel, BorderLayout.NORTH);
 
-        // BOTTOM: Combat status
-        combatStatusLabel = new JLabel();
-        combatStatusLabel.setFont(new Font("Arial", Font.BOLD, 17));
-        combatStatusLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        add(combatStatusLabel, BorderLayout.SOUTH);
+        // Panel chính
+        JPanel centerPanel = new JPanel(new GridLayout(1, 2, 10, 10));
+        centerPanel.add(playerPanel);
+        centerPanel.add(enemyPanel);
 
-        // Action listeners
-        attackBtn.addActionListener(this::onAttack);
-        itemBtn.addActionListener(this::onUseItem);
-        effectBtn.addActionListener(this::onBurnEffect);
-        buffBtn.addActionListener(this::onBuff);
+        // Thêm các panel vào frame
+        add(centerPanel, BorderLayout.CENTER);
+        add(controlPanel, BorderLayout.NORTH);
+        add(buffPanel, BorderLayout.WEST);
+        add(bottomPanel, BorderLayout.SOUTH);
+
+        // --- Gắn sự kiện cho các nút ---
+        attackBtn.addActionListener(e -> {
+            Soldier cur = controller.getCurrentSoldier();
+            Soldier target = getSelectedTarget();
+            if (cur != null && target != null)
+                controller.playerAttack(cur, target);
+        });
+
+        itemBtn.addActionListener(e -> {
+            Soldier cur = controller.getCurrentSoldier();
+            Soldier target = getSelectedTarget();
+            Weapon w = getSelectedWeapon(cur);
+            if (cur != null && target != null && w != null)
+                controller.playerUseItem(cur, target, w);
+        });
+
+        effectBtn.addActionListener(e -> {
+            Soldier target = getSelectedTarget();
+            if (target != null)
+                controller.playerBurn(target);
+        });
+
+        buffBtn.addActionListener(e -> {
+            Soldier buffTarget = getSelectedBuffTarget();
+            if (buffTarget != null)
+                controller.playerBuff(buffTarget);
+        });
+
         endTurnBtn.addActionListener(e -> controller.playerEndTurn());
 
-        update(null, null); // Initial update
         setVisible(true);
+        refresh();
     }
 
     @Override
     public void update(Observable o, Object arg) {
-        updateLog(arg);
-        Soldier cur = cm.getCurrentSoldier();
-        boolean isPlayer = isPlayerTurn(cur);
-
-        updateTeamPanels();
-        updateTargetBox(cur);
-        updateBuffTargetBox(cur);
-        updateItemBox(cur);
-
-        updateCombatStatus(cur, isPlayer);
-    }
-
-    private void updateLog(Object arg) {
-        if (arg instanceof String s && !s.isEmpty()) {
-            logArea.append(s + "\n");
+        // Nếu có log mới
+        if (arg instanceof String log) {
+            logArea.append(log + "\n");
             logArea.setCaretPosition(logArea.getDocument().getLength());
         }
+        refresh();
     }
 
-    private boolean isPlayerTurn(Soldier cur) {
-        return cur != null && cm.getPlayerTeam().contains(cur);
-    }
+    @Override
+    public void refresh() {
+        // Lấy dữ liệu từ controller, không truy cập model trực tiếp!
+        Soldier cur = controller.getCurrentSoldier();
+        boolean isPlayer = (cur != null && controller.getPlayerTeam().contains(cur));
 
-    private void updateTeamPanels() {
-        updateTeamPanel(playerPanel, cm.getPlayerTeam(), true);
-        updateTeamPanel(enemyPanel, cm.getEnemyTeam(), false);
-    }
-
-    private void updateTargetBox(Soldier cur) {
-        targetBox.removeAllItems();
-        if (cur == null) return;
-        List<Soldier> targets = cm.getPlayerTeam().contains(cur)
-                ? controller.getAlive(cm.getEnemyTeam())
-                : controller.getAlive(cm.getPlayerTeam());
-        for (Soldier s : targets) targetBox.addItem(s.getName());
-    }
-
-    private void updateBuffTargetBox(Soldier cur) {
-        buffTargetBox.removeAllItems();
-        if (isPlayerTurn(cur)) {
-            for (Soldier s : controller.getAlive(cm.getPlayerTeam()))
-                buffTargetBox.addItem(s.getName());
-        }
-    }
-
-    private void updateItemBox(Soldier cur) {
-        itemBox.removeAllItems();
-        if (isPlayerTurn(cur)) {
-            for (Weapon w : cur.getWeapons())
-                itemBox.addItem(w.getName());
-        }
-    }
-
-    private void updateCombatStatus(Soldier cur, boolean isPlayer) {
-        if (cm.isCombatEnded()) {
-            setAllButtonsEnabled(false);
-            combatStatusLabel.setText(cm.isPlayerWin() ? "You win!" : "You fck off.");
-            turnLabel.setText("Combat Ended.");
+        // Cập nhật thông tin lượt và trạng thái
+        turnLabel.setText("Lượt: " + (cur != null ? cur.getName() : "Hết trận"));
+        if (controller.isCombatEnded()) {
+            combatStatusLabel.setText(controller.isPlayerWin() ? "Bạn thắng!" : "Bạn thua!");
         } else {
-            turnLabel.setText("Turn: " + (cur != null ? cur.getName() : "-"));
-            combatStatusLabel.setText("");
-            setActionButtonsEnabled(isPlayer);
-            endTurnBtn.setEnabled(true);
+            combatStatusLabel.setText(isPlayer ? "Đến lượt bạn" : "Đến lượt địch");
         }
-    }
 
-    private void setAllButtonsEnabled(boolean enabled) {
-        attackBtn.setEnabled(enabled);
-        itemBtn.setEnabled(enabled);
-        effectBtn.setEnabled(enabled);
-        endTurnBtn.setEnabled(enabled);
-    }
+        // Cập nhật danh sách mục tiêu
+        targetBox.removeAllItems();
+        List<Soldier> targets = isPlayer
+                ? controller.getAlive(controller.getEnemyTeam())
+                : controller.getAlive(controller.getPlayerTeam());
+        for (Soldier s : targets) targetBox.addItem(s.getName());
 
-    private void setActionButtonsEnabled(boolean enabled) {
-        attackBtn.setEnabled(enabled);
-        itemBtn.setEnabled(enabled);
-        effectBtn.setEnabled(enabled);
-    }
-
-    private void updateTeamPanel(JPanel panel, List<Soldier> team, boolean isPlayer) {
-        panel.removeAll();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        for (Soldier s : team) {
-            JLabel label = new JLabel(String.format("%s [HP: %d]", s.getName(), s.getHealth()));
-            label.setFont(new Font("Arial", Font.BOLD, 15));
-            if (!s.isAlive()) {
-                label.setForeground(Color.GRAY);
-                label.setText(label.getText() + " (DEAD)");
-            } else {
-                label.setForeground(isPlayer ? new Color(25, 94, 209) : new Color(192, 52, 36));
+        // Cập nhật danh sách vật phẩm
+        itemBox.removeAllItems();
+        if (cur != null) {
+            for (Weapon w : cur.getWeapons()) {
+                itemBox.addItem(w.getName());
             }
-            panel.add(label);
         }
-        panel.revalidate();
-        panel.repaint();
+
+        // Cập nhật danh sách đồng minh cho buff
+        buffTargetBox.removeAllItems();
+        for (Soldier s : controller.getAlive(controller.getPlayerTeam())) {
+            buffTargetBox.addItem(s.getName());
+        }
+
+        // Cập nhật panel đội bạn
+        playerPanel.removeAll();
+        for (Soldier s : controller.getPlayerTeam()) {
+            JLabel label = new JLabel(s.getName() + " HP: " + s.getHealth() + " " + (s.isAlive() ? "" : "(X)"));
+            playerPanel.add(label);
+        }
+        playerPanel.revalidate();
+        playerPanel.repaint();
+
+        // Cập nhật panel đội địch
+        enemyPanel.removeAll();
+        for (Soldier s : controller.getEnemyTeam()) {
+            JLabel label = new JLabel(s.getName() + " HP: " + s.getHealth() + " " + (s.isAlive() ? "" : "(X)"));
+            enemyPanel.add(label);
+        }
+        enemyPanel.revalidate();
+        enemyPanel.repaint();
+
+        // Enable/disable nút theo trạng thái trận đấu
+        boolean enable = cur != null && isPlayer && !controller.isCombatEnded();
+        attackBtn.setEnabled(enable);
+        itemBtn.setEnabled(enable);
+        effectBtn.setEnabled(enable);
+        buffBtn.setEnabled(enable);
+        endTurnBtn.setEnabled(enable);
     }
 
-    private Soldier getTarget() {
+    private Soldier getSelectedTarget() {
         String name = (String) targetBox.getSelectedItem();
-        Soldier cur = cm.getCurrentSoldier();
-        List<Soldier> targets = cm.getPlayerTeam().contains(cur)
-                ? controller.getAlive(cm.getEnemyTeam())
-                : controller.getAlive(cm.getPlayerTeam());
+        List<Soldier> targets = isPlayerTurn()
+                ? controller.getAlive(controller.getEnemyTeam())
+                : controller.getAlive(controller.getPlayerTeam());
         for (Soldier s : targets) if (s.getName().equals(name)) return s;
         return null;
     }
 
-    private void onBuff(ActionEvent e) {
-        Soldier buffTarget = getBuffTarget();
-        if (buffTarget != null) {
-            controller.playerBuff(buffTarget);
-        }
-    }
-
-    private Soldier getBuffTarget() {
+    private Soldier getSelectedBuffTarget() {
         String name = (String) buffTargetBox.getSelectedItem();
-        List<Soldier> allies = controller.getAlive(cm.getPlayerTeam());
+        List<Soldier> allies = controller.getAlive(controller.getPlayerTeam());
         for (Soldier s : allies) if (s.getName().equals(name)) return s;
         return null;
     }
 
-
     private Weapon getSelectedWeapon(Soldier cur) {
         String itemName = (String) itemBox.getSelectedItem();
-        if (itemName == null) return null;
+        if (itemName == null || cur == null) return null;
         for (Weapon w : cur.getWeapons()) {
             if (w.getName().equals(itemName)) return w;
         }
         return null;
     }
 
-    private void onAttack(ActionEvent e) {
-        Soldier cur = cm.getCurrentSoldier();
-        Soldier target = getTarget();
-        if (cur != null && target != null) {
-            controller.playerAttack(cur, target);
-        }
-    }
-
-    private void onUseItem(ActionEvent e) {
-        Soldier cur = cm.getCurrentSoldier();
-        Soldier target = getTarget();
-        if (cur == null || target == null) return;
-        Weapon selected = getSelectedWeapon(cur);
-        if (selected == null) {
-            JOptionPane.showMessageDialog(this, "Item not found.");
-            return;
-        }
-        controller.playerUseItem(cur, target, selected);
-    }
-
-    private void onBurnEffect(ActionEvent e) {
-        Soldier target = getTarget();
-        if (target != null) {
-            controller.playerBurn(target);
-        }
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new MainFrame(new GameController()));
+    private boolean isPlayerTurn() {
+        Soldier cur = controller.getCurrentSoldier();
+        return (cur != null && controller.getPlayerTeam().contains(cur));
     }
 }

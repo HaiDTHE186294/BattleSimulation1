@@ -16,9 +16,10 @@ import java.util.Observable;
 
 public class GameController extends Observable {
     private final CombatManager cm;
+    private ui.GameView view;
 
     public GameController() {
-        // Khởi tạo đội hình và services
+        // ... (Khởi tạo các team, service, trang bị như bạn đã có)
         List<Soldier> playerTeam = new ArrayList<>();
         Soldier alice = new Soldier("Alice", 100, PersonStatus.ALIVE, 10, 5);
         Soldier bob = new Soldier("Bob", 90, PersonStatus.ALIVE, 8, 6);
@@ -46,11 +47,28 @@ public class GameController extends Observable {
         this.cm = new CombatManager(playerTeam, enemyTeam, personService, effectService, equipmentService);
     }
 
+    public void setView(ui.GameView view) {
+        this.view = view;
+    }
+
     public CombatManager getCombatManager() {
         return cm;
     }
 
-    // Gọi bởi UI khi user thao tác
+    public Soldier getCurrentSoldier() { return cm.getCurrentSoldier(); }
+    public List<Soldier> getPlayerTeam() { return cm.getPlayerTeam(); }
+    public List<Soldier> getEnemyTeam() { return cm.getEnemyTeam(); }
+    public boolean isCombatEnded() { return cm.isCombatEnded(); }
+    public boolean isPlayerWin() { return cm.isPlayerWin(); }
+    public List<Soldier> getAlive(List<Soldier> l) {
+        List<Soldier> a = new ArrayList<>();
+        for (Soldier s : l) if (s.isAlive()) a.add(s);
+        return a;
+    }
+
+    // Các method playerAttack, playerUseItem, playerBurn, playerBuff, playerEndTurn giữ nguyên
+    // Trong mỗi method, sau khi thao tác xong, gọi notifyAllState() để View tự refresh
+
     public void playerAttack(Soldier attacker, Soldier target) {
         if (cm.attack(attacker, target)) {
             notifyLog(attacker.getName() + " attacks " + target.getName() + "!");
@@ -72,20 +90,6 @@ public class GameController extends Observable {
         endTurnAndAutoEnemy();
     }
 
-    public void playerEndTurn() {
-        cm.endTurn();
-        notifyLog("Turn ended.");
-        autoEnemyTurn();
-        notifyAllState();
-    }
-
-    // Gọi sau mỗi thao tác player để cho enemy tự động đánh
-    private void endTurnAndAutoEnemy() {
-        cm.endTurn();
-        autoEnemyTurn();
-        notifyAllState();
-    }
-
     public void playerBuff(Soldier target) {
         BuffEffect buffEffect = new BuffEffect("Buff ATK", 3, 10, 5);
         cm.getEffectService().applyEffect(target, buffEffect);
@@ -93,7 +97,19 @@ public class GameController extends Observable {
         endTurnAndAutoEnemy();
     }
 
-    // Tự động cho toàn bộ enemy đánh hết lượt
+    public void playerEndTurn() {
+        cm.endTurn();
+        notifyLog("Turn ended.");
+        autoEnemyTurn();
+        notifyAllState();
+    }
+
+    private void endTurnAndAutoEnemy() {
+        cm.endTurn();
+        autoEnemyTurn();
+        notifyAllState();
+    }
+
     private void autoEnemyTurn() {
         Soldier cur = cm.getCurrentSoldier();
         boolean isPlayer = (cur != null && cm.getPlayerTeam().contains(cur));
@@ -110,21 +126,15 @@ public class GameController extends Observable {
         }
     }
 
-    // Lấy soldier còn sống
-    public List<Soldier> getAlive(List<Soldier> l) {
-        List<Soldier> a = new ArrayList<>();
-        for (Soldier s : l) if (s.isAlive()) a.add(s);
-        return a;
-    }
-
-    // Observer notification
     private void notifyLog(String log) {
         setChanged();
         notifyObservers(log);
+        if (view != null) view.refresh();
     }
 
     private void notifyAllState() {
         setChanged();
         notifyObservers();
+        if (view != null) view.refresh();
     }
 }
