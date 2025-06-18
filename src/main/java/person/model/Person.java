@@ -49,10 +49,10 @@ public abstract class Person {
         this.health = Math.max(0, this.health - amount);
         if (health <= 0) {
             this.status = PersonStatus.DEAD;
-            System.out.println(name + " đã chết.");
+            System.out.println(name + " dead.");
         } else {
             this.status = PersonStatus.INJURED;
-            System.out.println(name + " đã mất " + amount + " máu. Máu còn lại: " + health);
+            System.out.println(name + " lost " + amount + " HP. Remain: " + health);
         }
         notifyHealthChanged();
     }
@@ -61,14 +61,14 @@ public abstract class Person {
         this.health += amount;
         if (health <= 0) {
             this.status = PersonStatus.DEAD;
-            System.out.println(name + " đã chết.");
+            System.out.println(name + " dead.");
         } else if (health > 100) {
             this.health = 100; // Giới hạn máu tối đa
             this.status = PersonStatus.ALIVE;
-            System.out.println(name + " đã hồi phục. Máu hiện tại: " + health);
+            System.out.println(name + " healed. Remain: " + health);
         } else {
             this.status = PersonStatus.ALIVE;
-            System.out.println(name + " đã hồi phục " + amount + " máu. Máu hiện tại: " + health);
+            System.out.println(name + " healed " + amount + " HP. Remain: " + health);
         }
         notifyHealthChanged();
     }
@@ -95,7 +95,7 @@ public abstract class Person {
     public void removeEffect(Effect effect) {
         if (activeEffects.remove(effect)) {
             activeEffects.remove(effect);
-            System.out.println(getName() + " đã loại bỏ hiệu ứng " + effect.getName());
+            System.out.println(getName() + " removed " + effect.getName());
         }
     }
 
@@ -109,7 +109,7 @@ public abstract class Person {
             Effect effect = it.next();
             effect.onTurnStart(this);
             if (effect.isExpired()) {
-                System.out.println(getName() + " đã hết hiệu ứng " + effect.getName());
+                System.out.println(getName() + " ended " + effect.getName());
                 it.remove();
             }
         }

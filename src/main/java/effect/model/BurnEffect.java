@@ -7,20 +7,20 @@ public class BurnEffect extends AbstractEffect {
     private int damagePerTurn;
 
     public BurnEffect(int duration, int damagePerTurn) {
-        super("Thiêu đốt", duration);
+        super("Burn", duration);
         this.damagePerTurn = damagePerTurn;
     }
 
     @Override
     public void apply(Person target) {
-        System.out.println(target.getName() + " bị thiêu đốt trong " + duration + " lượt.");
+        System.out.println(target.getName() + " burning in" + duration + " move.");
     }
 
     @Override
     public void onTurnStart(Person target) {
         if (isExpired()) return;
 
-        System.out.println(target.getName() + " nhận " + damagePerTurn + " sát thương từ thiêu đốt.");
+        System.out.println(target.getName() + " take " + damagePerTurn + " damage from burning.");
         target.takeDamage(damagePerTurn);
     }
 }

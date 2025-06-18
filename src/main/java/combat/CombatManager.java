@@ -118,4 +118,8 @@ public class CombatManager {
             }
         }
     }
+
+    public EffectService getEffectService() {
+        return effectService;
+    }
 }

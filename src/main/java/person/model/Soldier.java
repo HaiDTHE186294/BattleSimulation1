@@ -85,9 +85,9 @@ public class Soldier extends Person {
     @Override
     public void react(String order) {
         switch (order) {
-            case "Attack" -> System.out.println(getName() + " đang tấn công với " + getTotalAtk() + " sát thương.");
-            case "Defend" -> System.out.println(getName() + " phòng thủ với " + getTotalDef() + " giáp.");
-            default -> System.out.println(getName() + " chưa biết làm gì.");
+            case "Attack" -> System.out.println(getName() + " attacking " + getTotalAtk() + " damage.");
+            case "Defend" -> System.out.println(getName() + " defending " + getTotalDef() + " damage.");
+            default -> System.out.println(getName() + " nothing to do.");
         }
     }
 

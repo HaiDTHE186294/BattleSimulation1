@@ -45,7 +45,7 @@ public class Weapon extends AbstractEquipment {
     public void action(Person target) {
         int damage = this.atk * 10;
         target.takeDamage(damage);
-        System.out.println(getName() + " đã tấn công " + target.getName() + " với sức mạnh " + damage);
+        System.out.println(getName() + " attacked " + target.getName() + " with " + damage);
     }
 
     @Override

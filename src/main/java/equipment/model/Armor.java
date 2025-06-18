@@ -45,7 +45,7 @@ public class Armor extends AbstractEquipment {
      */
     @Override
     public void action(Person user) {
-        System.out.println(getName() + " kích hoạt hiệu ứng bảo hộ cho " + user.getName());
+        System.out.println(getName() + " actives guardian buff to " + user.getName());
 
         for (Effect effect : effects) {
             effect.apply(user); // Có thể là hồi máu, tăng kháng, tạo lá chắn...
