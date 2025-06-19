@@ -1,5 +1,6 @@
 package combat;
 
+import equipment.model.IComponent;
 import equipment.model.Weapon;
 import equipment.service.EquipmentService;
 import gamecore.GameContext;
@@ -46,7 +47,7 @@ public class CombatManager {
         return null;
     }
 
-    public boolean useEquipment(Soldier target, Weapon weapon) {
+    public boolean useEquipment(Soldier target, IComponent weapon) {
         if (target == null || !target.isAlive()) {
             System.out.println("Target is not available.");
             return false;

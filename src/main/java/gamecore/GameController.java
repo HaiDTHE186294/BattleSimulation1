@@ -4,6 +4,8 @@ import combat.CombatManager;
 import effect.model.BuffEffect;
 import effect.model.BurnEffect;
 import effect.service.EffectService;
+import equipment.model.IComponent;
+import equipment.model.LuckyStone;
 import equipment.model.Weapon;
 import equipment.service.EquipmentService;
 import person.model.PersonStatus;
@@ -36,13 +38,17 @@ public class GameController extends Observable {
         Weapon staff = new Weapon("Staff", "Gậy", 7);
         Weapon axe = new Weapon("Axe", "Rìu", 10);
 
+        //Test Charm nhé
+        IComponent luckyStaff = new LuckyStone(staff);
+
+
         EffectService effectService = new EffectService();
         EquipmentService equipmentService = new EquipmentService();
         PersonService personService = new PersonService(effectService);
 
         equipmentService.equip(alice, sword);
         equipmentService.equip(bob, axe);
-        equipmentService.equip(alice, staff);
+        equipmentService.equip(alice, luckyStaff);
 
         this.cm = new CombatManager(playerTeam, enemyTeam, personService, effectService, equipmentService);
     }
@@ -66,8 +72,6 @@ public class GameController extends Observable {
         return a;
     }
 
-    // Các method playerAttack, playerUseItem, playerBurn, playerBuff, playerEndTurn giữ nguyên
-    // Trong mỗi method, sau khi thao tác xong, gọi notifyAllState() để View tự refresh
 
     public void playerAttack(Soldier attacker, Soldier target) {
         if (cm.attack(attacker, target)) {
@@ -76,7 +80,7 @@ public class GameController extends Observable {
         }
     }
 
-    public void playerUseItem(Soldier user, Soldier target, Weapon w) {
+    public void playerUseItem(Soldier user, Soldier target, IComponent w) {
         if (cm.useEquipment(target, w)) {
             notifyLog(user.getName() + " uses " + w.getName() + " on " + target.getName() + "!");
             endTurnAndAutoEnemy();

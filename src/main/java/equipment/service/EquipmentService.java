@@ -47,9 +47,7 @@ public class EquipmentService {
 
     public void triggerActionOnEquip(Soldier target, IComponent item) {
         // Chỉ kích hoạt effect nếu item là Wp và có hiệu ứng
-        if (item instanceof Weapon weapon) {
-            weapon.action(target);
-        }
+        item.action(target);
     }
 
     private void notifyEquipmentChanged(Soldier soldier) {

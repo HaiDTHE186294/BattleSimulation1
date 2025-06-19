@@ -1,5 +1,7 @@
 package ui;
 
+import equipment.model.AbstractEquipment;
+import equipment.model.IComponent;
 import gamecore.GameController;
 import person.model.Soldier;
 import equipment.model.Weapon;
@@ -59,9 +61,11 @@ public class MainFrame extends JFrame implements GameView, Observer {
         enemyPanel.setLayout(new BoxLayout(enemyPanel, BoxLayout.Y_AXIS));
 
         // Panel điều khiển
-        JPanel controlPanel = new JPanel(new GridLayout(3, 2, 5, 5));
+        JPanel controlPanel = new JPanel(new GridLayout(4, 2, 5, 5));
         controlPanel.add(new JLabel("Chọn mục tiêu:"));
         controlPanel.add(targetBox);
+        controlPanel.add(new JLabel("Chọn vũ khí:"));
+        controlPanel.add(itemBox);
         controlPanel.add(attackBtn);
         controlPanel.add(itemBtn);
         controlPanel.add(effectBtn);
@@ -103,7 +107,7 @@ public class MainFrame extends JFrame implements GameView, Observer {
         itemBtn.addActionListener(e -> {
             Soldier cur = controller.getCurrentSoldier();
             Soldier target = getSelectedTarget();
-            Weapon w = getSelectedWeapon(cur);
+            IComponent w = getSelectedWeapon(cur);
             if (cur != null && target != null && w != null)
                 controller.playerUseItem(cur, target, w);
         });
@@ -160,8 +164,10 @@ public class MainFrame extends JFrame implements GameView, Observer {
         // Cập nhật danh sách vật phẩm
         itemBox.removeAllItems();
         if (cur != null) {
-            for (Weapon w : cur.getWeapons()) {
-                itemBox.addItem(w.getName());
+            for (IComponent ic : cur.getEquipmentList()) {
+                if (ic instanceof IComponent eq) {
+                    itemBox.addItem(eq.getName());
+                }
             }
         }
 
@@ -214,10 +220,10 @@ public class MainFrame extends JFrame implements GameView, Observer {
         return null;
     }
 
-    private Weapon getSelectedWeapon(Soldier cur) {
+    private IComponent getSelectedWeapon(Soldier cur) {
         String itemName = (String) itemBox.getSelectedItem();
         if (itemName == null || cur == null) return null;
-        for (Weapon w : cur.getWeapons()) {
+        for (IComponent w : cur.getEquipmentList()) {
             if (w.getName().equals(itemName)) return w;
         }
         return null;
