@@ -1,0 +1,274 @@
+[
+  {
+    "id": "goblin_band",
+    "name": "Goblin Band",
+    "members": [
+      {
+        "name": "Goblin",
+        "hp": 50,
+        "status": "ALIVE",
+        "atk": 7,
+        "def": 2,
+        "equipment": [
+          { "type": "Weapon", "name": "Dagger", "displayName": "Dao găm", "power": 2 }
+        ]
+      },
+      {
+        "name": "Goblin Archer",
+        "hp": 45,
+        "status": "ALIVE",
+        "atk": 6,
+        "def": 2,
+        "equipment": [
+          { "type": "Weapon", "name": "Shortbow", "displayName": "Cung ngắn", "power": 3 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "orc_patrol",
+    "name": "Orc Patrol",
+    "members": [
+      {
+        "name": "Orc Warrior",
+        "hp": 80,
+        "status": "ALIVE",
+        "atk": 15,
+        "def": 5,
+        "equipment": [
+          { "type": "Weapon", "name": "Axe", "displayName": "Rìu", "power": 7 }
+        ]
+      },
+      {
+        "name": "Orc Shaman",
+        "hp": 60,
+        "status": "ALIVE",
+        "atk": 8,
+        "def": 3,
+        "equipment": [
+          { "type": "Weapon", "name": "Totem", "displayName": "Phép thuật", "power": 6 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "troll_solo",
+    "name": "Troll Solo",
+    "members": [
+      {
+        "name": "Troll",
+        "hp": 120,
+        "status": "ALIVE",
+        "atk": 18,
+        "def": 8,
+        "equipment": [
+          { "type": "Weapon", "name": "Club", "displayName": "Chùy", "power": 8 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "undead_ambush",
+    "name": "Undead Ambush",
+    "members": [
+      {
+        "name": "Skeleton",
+        "hp": 40,
+        "status": "ALIVE",
+        "atk": 6,
+        "def": 1,
+        "equipment": [
+          { "type": "Weapon", "name": "Rusty Sword", "displayName": "Kiếm gỉ", "power": 2 }
+        ]
+      },
+      {
+        "name": "Zombie",
+        "hp": 70,
+        "status": "ALIVE",
+        "atk": 8,
+        "def": 3,
+        "equipment": [
+          { "type": "Weapon", "name": "Rotten Club", "displayName": "Chùy mục", "power": 3 }
+        ]
+      },
+      {
+        "name": "Necromancer",
+        "hp": 60,
+        "status": "ALIVE",
+        "atk": 12,
+        "def": 2,
+        "equipment": [
+          { "type": "Weapon", "name": "Dark Staff", "displayName": "Trượng hắc ám", "power": 7 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "wolf_pack",
+    "name": "Wolf Pack",
+    "members": [
+      {
+        "name": "Wolf",
+        "hp": 55,
+        "status": "ALIVE",
+        "atk": 9,
+        "def": 2,
+        "equipment": []
+      },
+      {
+        "name": "Alpha Wolf",
+        "hp": 75,
+        "status": "ALIVE",
+        "atk": 13,
+        "def": 4,
+        "equipment": [
+          { "type": "Weapon", "name": "Fang", "displayName": "Nanh", "power": 4 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bandit_gang",
+    "name": "Bandit Gang",
+    "members": [
+      {
+        "name": "Bandit",
+        "hp": 60,
+        "status": "ALIVE",
+        "atk": 10,
+        "def": 3,
+        "equipment": [
+          { "type": "Weapon", "name": "Short Sword", "displayName": "Kiếm ngắn", "power": 4 }
+        ]
+      },
+      {
+        "name": "Bandit Leader",
+        "hp": 85,
+        "status": "ALIVE",
+        "atk": 14,
+        "def": 6,
+        "equipment": [
+          { "type": "Weapon", "name": "Sabre", "displayName": "Kiếm cong", "power": 6 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "elemental_duo",
+    "name": "Elemental Duo",
+    "members": [
+      {
+        "name": "Fire Elemental",
+        "hp": 70,
+        "status": "ALIVE",
+        "atk": 16,
+        "def": 2,
+        "equipment": [
+          { "type": "Weapon", "name": "Flame Orb", "displayName": "Cầu lửa", "power": 9 }
+        ]
+      },
+      {
+        "name": "Water Elemental",
+        "hp": 65,
+        "status": "ALIVE",
+        "atk": 14,
+        "def": 2,
+        "equipment": [
+          { "type": "Weapon", "name": "Water Orb", "displayName": "Cầu nước", "power": 9 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "slime_swarm",
+    "name": "Slime Swarm",
+    "members": [
+      {
+        "name": "Green Slime",
+        "hp": 35,
+        "status": "ALIVE",
+        "atk": 5,
+        "def": 1,
+        "equipment": []
+      },
+      {
+        "name": "Blue Slime",
+        "hp": 38,
+        "status": "ALIVE",
+        "atk": 6,
+        "def": 2,
+        "equipment": []
+      },
+      {
+        "name": "Red Slime",
+        "hp": 40,
+        "status": "ALIVE",
+        "atk": 7,
+        "def": 2,
+        "equipment": []
+      }
+    ]
+  },
+  {
+    "id": "assassin_squad",
+    "name": "Assassin Squad",
+    "members": [
+      {
+        "name": "Assassin",
+        "hp": 50,
+        "status": "ALIVE",
+        "atk": 17,
+        "def": 2,
+        "equipment": [
+          { "type": "Weapon", "name": "Hidden Blade", "displayName": "Dao găm bí mật", "power": 8 }
+        ]
+      },
+      {
+        "name": "Shadow Assassin",
+        "hp": 55,
+        "status": "ALIVE",
+        "atk": 19,
+        "def": 3,
+        "equipment": [
+          { "type": "Weapon", "name": "Shadow Blade", "displayName": "Kiếm bóng tối", "power": 9 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "mage_coven",
+    "name": "Mage Coven",
+    "members": [
+      {
+        "name": "Sorcerer",
+        "hp": 55,
+        "status": "ALIVE",
+        "atk": 14,
+        "def": 4,
+        "equipment": [
+          { "type": "Weapon", "name": "Magic Staff", "displayName": "Trượng phép", "power": 7 }
+        ]
+      },
+      {
+        "name": "Witch",
+        "hp": 50,
+        "status": "ALIVE",
+        "atk": 15,
+        "def": 3,
+        "equipment": [
+          { "type": "Weapon", "name": "Wand", "displayName": "Đũa phép", "power": 6 }
+        ]
+      },
+      {
+        "name": "Dark Mage",
+        "hp": 60,
+        "status": "ALIVE",
+        "atk": 17,
+        "def": 5,
+        "equipment": [
+          { "type": "Weapon", "name": "Doom Staff", "displayName": "Trượng diệt vong", "power": 8 }
+        ]
+      }
+    ]
+  }
+]

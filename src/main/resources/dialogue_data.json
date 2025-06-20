@@ -1,0 +1,63 @@
+[
+  {
+    "id": "start",
+    "speaker": "OldMan",
+    "text": "Chào con, ngươi đến từ đâu?",
+    "options": [
+      {
+        "text": "Tôi đến từ làng bên.",
+        "nextDialogueId": "node2",
+        "actions": [
+          { "type": "startBattle", "battleId": "battle_05" }
+        ]
+      },
+      {
+        "text": "Không liên quan tới ông.",
+        "nextDialogueId": "node3"
+      }
+    ]
+  },
+  {
+    "id": "node2",
+    "speaker": "OldMan",
+    "text": "Ồ, ta cũng từng sống ở đó. Chúc may mắn trên đường!",
+    "options": [
+      {
+        "text": "Chào tạm biệt.",
+        "nextDialogueId": "node2.1"
+      },
+      {
+        "text": "Cút mẹ ông đi.",
+        "nextDialogueId": "node2.2"
+      },
+      {
+        "text": "Súc sanh.",
+        "nextDialogueId": "node2.3"
+      }
+    ]
+  },
+  {
+    "id": "node3",
+    "speaker": "OldMan",
+    "text": "Thật bất lịch sự! Ta sẽ không nói chuyện nữa.",
+    "options": []
+  },
+  {
+    "id": "node2.1",
+    "speaker": "OldWoman",
+    "text": "Tao giết mày bây giờ.",
+    "options": []
+  },
+  {
+    "id": "node2.2",
+    "speaker": "OldWoman",
+    "text": "Nói lại lần nữa xem.",
+    "options": []
+  },
+  {
+    "id": "node2.3",
+    "speaker": "OldWoman",
+    "text": "Tao nhớ mặt mày rồi đấy.",
+    "options": []
+  }
+]

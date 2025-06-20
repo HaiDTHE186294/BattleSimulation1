@@ -40,15 +40,13 @@ public class Armor extends AbstractEquipment {
         this.effects = effects;
     }
 
-    /**
-     * Kích hoạt hiệu ứng của giáp khi bị tấn công hoặc phòng thủ (tùy theo design).
-     */
+
     @Override
     public void action(Person user) {
         System.out.println(getName() + " actives guardian buff to " + user.getName());
 
         for (Effect effect : effects) {
-            effect.apply(user); // Có thể là hồi máu, tăng kháng, tạo lá chắn...
+            effect.apply(user);
         }
     }
 

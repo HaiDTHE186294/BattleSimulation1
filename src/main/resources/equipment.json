@@ -1,0 +1,43 @@
+[
+  {
+    "type": "Weapon",
+    "id": "sword",
+    "name": "Sword",
+    "displayName": "Kiếm",
+    "power": 5
+  },
+  {
+    "type": "Weapon",
+    "id": "staff",
+    "name": "Staff",
+    "displayName": "Gậy",
+    "power": 7
+  },
+  {
+    "type": "Weapon",
+    "id": "axe",
+    "name": "Axe",
+    "displayName": "Rìu",
+    "power": 10
+  },
+  {
+    "type": "Armor",
+    "id": "armor",
+    "name": "Armor",
+    "displayName": "Giáp",
+    "defense": 3
+  },
+  {
+    "type": "LuckyStone",
+    "id": "lucky_staff",
+    "name": "LuckyStone",
+    "displayName": "Đá may mắn (bọc Gậy)",
+    "wrapped": {
+      "type": "Weapon",
+      "id": "staff",
+      "name": "Staff",
+      "displayName": "Gậy",
+      "power": 7
+    }
+  }
+]
