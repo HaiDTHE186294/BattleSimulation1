@@ -4,6 +4,8 @@ import dialogue.controller.DialogueController;
 import dialogue.service.DialogueLoader;
 import dialogue.model.DialogueContext;
 import dialogue.service.DialogueService;
+import javax.swing.WindowConstants;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +29,7 @@ public class DialogueAppSwing {
             controller = new SwingDialogueController(service);
 
             JFrame frame = new JFrame("Hội thoại Swing");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             frame.setSize(480, 340);
 
             speakerLabel = new JLabel();
@@ -58,7 +60,6 @@ public class DialogueAppSwing {
             frame.setVisible(true);
         } catch (Exception e) {
             System.err.println("Error starting application:");
-            e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Failed to start application: " + e.getMessage());
         }
     }

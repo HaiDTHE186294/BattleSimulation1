@@ -74,16 +74,22 @@ public class CombatManager {
         currentSoldier = null; // Reset cho lượt mới
         currentTurnIndex++;
 
-        // Nếu hết lượt cho toàn đội
-        if (currentTurnIndex >= (isPlayerTurn ? playerTeam : enemyTeam).size()) {
+        // DỌN DẸP NGƯỜI CHẾT NGAY SAU KHI KẾT THÚC LƯỢT
+        cleanDead();
+
+        List<Soldier> team = isPlayerTurn ? playerTeam : enemyTeam;
+        // Nếu index vượt quá size do có người bị loại, reset index và chuyển lượt
+        if (currentTurnIndex >= team.size()) {
             currentTurnIndex = 0;
             isPlayerTurn = !isPlayerTurn;
+            // Sau khi chuyển lượt, lại cleanDead một lần nữa để đảm bảo danh sách mới
             cleanDead();
         }
     }
 
     private void cleanDead() {
-        // Remove người chết ra khỏi lượt hoặc gắn nhãn isAlive = false
+        playerTeam.removeIf(s -> !s.isAlive());
+        enemyTeam.removeIf(s -> !s.isAlive());
     }
 
     public boolean isCombatEnded() {

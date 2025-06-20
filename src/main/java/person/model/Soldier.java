@@ -18,7 +18,7 @@ public class Soldier extends Person {
     private int currentDef;
     private final List<IComponent> equipmentList;
     private final List<GameObserver> observers;
-    private final List<Effect> activeEffects; // Giới hạn số lượng trang bị
+
 
     public Soldier(String name, int health, PersonStatus status, int baseAtk, int baseDef) {
         super(name, health, status);

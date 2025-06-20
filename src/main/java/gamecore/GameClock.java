@@ -20,7 +20,9 @@ public class GameClock extends Thread {
                     w.tick();
                 }
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Thread.currentThread().interrupt(); // Đặt lại trạng thái ngắt ?? chưa hiểu lắm
+                System.err.println("GameClock interrupted: " + e.getMessage());
+                break;
             }
         }
     }
