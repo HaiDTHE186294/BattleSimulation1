@@ -1,10 +1,8 @@
 package ui;
 
-import equipment.model.AbstractEquipment;
 import equipment.model.IComponent;
 import gamecore.GameController;
 import person.model.Soldier;
-import equipment.model.Weapon;
 
 import javax.swing.*;
 import java.awt.*;
@@ -64,7 +62,7 @@ public class MainFrame extends JFrame implements GameView, Observer {
         JPanel controlPanel = new JPanel(new GridLayout(4, 2, 5, 5));
         controlPanel.add(new JLabel("Chọn mục tiêu:"));
         controlPanel.add(targetBox);
-        controlPanel.add(new JLabel("Chọn vũ khí:"));
+        controlPanel.add(new JLabel("Chọn vật phẩm:"));
         controlPanel.add(itemBox);
         controlPanel.add(attackBtn);
         controlPanel.add(itemBtn);
@@ -126,6 +124,9 @@ public class MainFrame extends JFrame implements GameView, Observer {
 
         endTurnBtn.addActionListener(e -> controller.playerEndTurn());
 
+        // Khi chọn vật phẩm, cập nhật lại danh sách mục tiêu phù hợp
+        itemBox.addActionListener(e -> updateTargetBox());
+
         setVisible(true);
         refresh();
     }
@@ -142,7 +143,6 @@ public class MainFrame extends JFrame implements GameView, Observer {
 
     @Override
     public void refresh() {
-        // Lấy dữ liệu từ controller, không truy cập model trực tiếp!
         Soldier cur = controller.getCurrentSoldier();
         boolean isPlayer = (cur != null && controller.getPlayerTeam().contains(cur));
 
@@ -154,22 +154,16 @@ public class MainFrame extends JFrame implements GameView, Observer {
             combatStatusLabel.setText(isPlayer ? "Đến lượt bạn" : "Đến lượt địch");
         }
 
-        // Cập nhật danh sách mục tiêu
-        targetBox.removeAllItems();
-        List<Soldier> targets = isPlayer
-                ? controller.getAlive(controller.getEnemyTeam())
-                : controller.getAlive(controller.getPlayerTeam());
-        for (Soldier s : targets) targetBox.addItem(s.getName());
-
         // Cập nhật danh sách vật phẩm
         itemBox.removeAllItems();
         if (cur != null) {
             for (IComponent ic : cur.getEquipmentList()) {
-                if (ic instanceof IComponent eq) {
-                    itemBox.addItem(eq.getName());
-                }
+                itemBox.addItem(ic.getName());
             }
         }
+
+        // Cập nhật danh sách mục tiêu phù hợp với vật phẩm đang chọn
+        updateTargetBox();
 
         // Cập nhật danh sách đồng minh cho buff
         buffTargetBox.removeAllItems();
@@ -180,7 +174,7 @@ public class MainFrame extends JFrame implements GameView, Observer {
         // Cập nhật panel đội bạn
         playerPanel.removeAll();
         for (Soldier s : controller.getPlayerTeam()) {
-            JLabel label = new JLabel(s.getName() + " HP: " + s.getHealth() + " " + (s.isAlive() ? "" : "(X)"));
+            JLabel label = new JLabel(buildStatString(s));
             playerPanel.add(label);
         }
         playerPanel.revalidate();
@@ -189,7 +183,7 @@ public class MainFrame extends JFrame implements GameView, Observer {
         // Cập nhật panel đội địch
         enemyPanel.removeAll();
         for (Soldier s : controller.getEnemyTeam()) {
-            JLabel label = new JLabel(s.getName() + " HP: " + s.getHealth() + " " + (s.isAlive() ? "" : "(X)"));
+            JLabel label = new JLabel(buildStatString(s));
             enemyPanel.add(label);
         }
         enemyPanel.revalidate();
@@ -204,12 +198,56 @@ public class MainFrame extends JFrame implements GameView, Observer {
         endTurnBtn.setEnabled(enable);
     }
 
+    /**
+     * Cập nhật targetBox theo loại effect của vật phẩm đang chọn
+     */
+    private void updateTargetBox() {
+        targetBox.removeAllItems();
+        Soldier cur = controller.getCurrentSoldier();
+        IComponent selectedItem = getSelectedWeapon(cur);
+
+        boolean isBuff = selectedItem != null && controller.isBuffItem(selectedItem);
+        boolean isAttack = selectedItem != null && controller.isAttackItem(selectedItem);
+
+        List<Soldier> targets;
+        if (selectedItem == null) {
+            targets = List.of();
+        } else if (isAttack) {
+            targets = controller.getAlive(controller.getEnemyTeam());
+        } else if (isBuff) {
+            targets = controller.getAlive(controller.getPlayerTeam());
+        } else {
+            // Vật phẩm không có effect, vẫn cho phép đánh thường lên địch
+            targets = controller.getAlive(controller.getEnemyTeam());
+        }
+        for (Soldier s : targets) targetBox.addItem(s.getName());
+    }
+
+    /**
+     * Hiển thị đầy đủ chỉ số và hiệu ứng của nhân vật
+     */
+    private String buildStatString(Soldier s) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(s.getName())
+                .append(" | HP: ").append(s.getHealth())
+                .append(" | ATK: ").append(s.getTotalAtk())
+                .append(" | DEF: ").append(s.getTotalDef())
+                .append(s.isAlive() ? " | [ALIVE]" : " | [DEAD]");
+        if (s.getActiveEffects() != null && !s.getActiveEffects().isEmpty()) {
+            sb.append(" | Effects: ");
+            for (var e : s.getActiveEffects()) sb.append(e.getName()).append("(").append(e.getDuration()).append(") ");
+        }
+        return sb.toString();
+    }
+
     private Soldier getSelectedTarget() {
         String name = (String) targetBox.getSelectedItem();
-        List<Soldier> targets = isPlayerTurn()
-                ? controller.getAlive(controller.getEnemyTeam())
-                : controller.getAlive(controller.getPlayerTeam());
-        for (Soldier s : targets) if (s.getName().equals(name)) return s;
+        if (name == null) return null;
+        // Tìm trong cả hai đội (có thể chọn buff cho đồng đội hoặc tấn công địch)
+        for (Soldier s : controller.getAlive(controller.getPlayerTeam()))
+            if (s.getName().equals(name)) return s;
+        for (Soldier s : controller.getAlive(controller.getEnemyTeam()))
+            if (s.getName().equals(name)) return s;
         return null;
     }
 
@@ -227,10 +265,5 @@ public class MainFrame extends JFrame implements GameView, Observer {
             if (w.getName().equals(itemName)) return w;
         }
         return null;
-    }
-
-    private boolean isPlayerTurn() {
-        Soldier cur = controller.getCurrentSoldier();
-        return (cur != null && controller.getPlayerTeam().contains(cur));
     }
 }

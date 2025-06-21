@@ -10,6 +10,7 @@ public interface Effect {
     boolean isExpired();
     void reduceDuration();
     void onExpire(Person target);
+    int getDuration();
 
 
 }

@@ -3,6 +3,7 @@ package gamecore;
 import combat.CombatManager;
 import effect.model.BuffEffect;
 import effect.model.BurnEffect;
+import effect.model.Effect;
 import effect.service.EffectService;
 import equipment.model.Armor;
 import equipment.model.IComponent;
@@ -23,34 +24,49 @@ public class GameController extends Observable {
     private final CombatManager cm;
     private ui.GameView view;
 
-    public GameController() {
-
-        List<Soldier> playerTeam = new ArrayList<>();
-        Soldier alice = new Soldier("Alice", 100, PersonStatus.ALIVE, 10, 5);
-        Soldier bob = new Soldier("Bob", 90, PersonStatus.ALIVE, 8, 6);
-        Soldier charlie = new Soldier("Charlie", 85, PersonStatus.ALIVE, 9, 7);
-        playerTeam.add(alice);
-        playerTeam.add(bob);
-        playerTeam.add(charlie);
-
-
-
+    public GameController(String enemyTeamId) {
+        List<Soldier> playerTeam = createPlayerTeam();
         EffectService effectService = new EffectService();
         EquipmentService equipmentService = new EquipmentService();
         PersonService personService = new PersonService(effectService);
-        Map<String, IComponent> equipmentMap;
+
+        Map<String, IComponent> equipmentMap = loadEquipmentMap("equipment.json");
+        equipPlayerTeam(playerTeam, equipmentMap, equipmentService);
+
+        List<Soldier> enemyTeam = loadEnemyTeam(enemyTeamId);
+
+        this.cm = new CombatManager(playerTeam, enemyTeam, personService, effectService, equipmentService);
+    }
+
+    private List<Soldier> createPlayerTeam() {
+        List<Soldier> team = new ArrayList<>();
+        Soldier alice = new Soldier("Alice", 100, PersonStatus.ALIVE, 10, 5);
+        Soldier bob = new Soldier("Bob", 90, PersonStatus.ALIVE, 8, 6);
+        Soldier charlie = new Soldier("Charlie", 85, PersonStatus.ALIVE, 9, 7);
+        team.add(alice);
+        team.add(bob);
+        team.add(charlie);
+        return team;
+    }
+
+    private Map<String, IComponent> loadEquipmentMap(String fileName) {
         try {
-            equipmentMap = EquipmentLoader.loadEquipmentMap("equipment.json");
+            return EquipmentLoader.loadEquipmentMap(fileName);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
 
-        IComponent sword = equipmentMap.get("sword"); // id từ json
+    private void equipPlayerTeam(List<Soldier> playerTeam, Map<String, IComponent> equipmentMap, EquipmentService equipmentService) {
+        Soldier alice = playerTeam.get(0);
+        Soldier bob = playerTeam.get(1);
+        // Soldier charlie = playerTeam.get(2); // Nếu cần trang bị cho Charlie
+
+        IComponent sword = equipmentMap.get("sword");
         IComponent staff = equipmentMap.get("staff");
         IComponent axe = equipmentMap.get("axe");
         IComponent armor = equipmentMap.get("armor");
-        IComponent luckyStaff = equipmentMap.get("lucky_staff"); // id
-
+        IComponent luckyStaff = equipmentMap.get("lucky_staff");
 
         equipmentService.equip(alice, sword);
         equipmentService.equip(alice, staff);
@@ -58,20 +74,17 @@ public class GameController extends Observable {
         equipmentService.equip(bob, axe);
         equipmentService.equip(bob, sword);
         equipmentService.equip(alice, luckyStaff);
+    }
 
-        // Load tất cả team từ file
-        List<CombatLevelLoader.EnemyTeamDef> allTeams = null;
+    private List<Soldier> loadEnemyTeam(String teamId) {
+        List<CombatLevelLoader.EnemyTeamDef> allTeams;
         try {
             allTeams = CombatLevelLoader.loadEnemyTeams("enemy_teams.json");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-
-        CombatLevelLoader.EnemyTeamDef team = CombatLevelLoader.findTeamById(allTeams, "orc_patrol");
-        List<Soldier> enemyTeam = CombatLevelLoader.toSoldierList(team);
-
-        this.cm = new CombatManager(playerTeam, enemyTeam, personService, effectService, equipmentService);
+        CombatLevelLoader.EnemyTeamDef team = CombatLevelLoader.findTeamById(allTeams, teamId);
+        return CombatLevelLoader.toSoldierList(team);
     }
 
     public void setView(ui.GameView view) {
@@ -103,6 +116,22 @@ public class GameController extends Observable {
 
     public void playerUseItem(Soldier user, Soldier target, IComponent w) {
         if (cm.useEquipment(target, w)) {
+            // Áp dụng các effect (nếu có)
+            if (w instanceof equipment.model.Weapon) {
+                for (effect.model.Effect effect : ((equipment.model.Weapon) w).getEffects()) {
+                    cm.getEffectService().applyEffect(target, effect);
+                }
+            }
+            if (w instanceof equipment.model.Armor) {
+                for (effect.model.Effect effect : ((equipment.model.Armor) w).getEffects()) {
+                    cm.getEffectService().applyEffect(target, effect);
+                }
+            }
+            if (w instanceof equipment.model.LuckyStone) {
+                for (effect.model.Effect effect : ((equipment.model.LuckyStone) w).getEffects()) {
+                    cm.getEffectService().applyEffect(target, effect);
+                }
+            }
             notifyLog(user.getName() + " uses " + w.getName() + " on " + target.getName() + "!");
             endTurnAndAutoEnemy();
         }
@@ -161,5 +190,45 @@ public class GameController extends Observable {
         setChanged();
         notifyObservers();
         if (view != null) view.refresh();
+    }
+
+
+    public boolean isBuffItem(IComponent item) {
+        // LuckyStone: kiểm tra cả wrapped
+        if (item instanceof LuckyStone) {
+            LuckyStone l = (LuckyStone) item;
+            if (l.getEffects() != null) {
+                for (Effect e : l.getEffects()) if (e instanceof BuffEffect) return true;
+            }
+            // Kiểm tra effect của wrapped (nếu có)
+            if (l.getEffects() != null && isBuffItem((IComponent) l.getComponent())) return true;
+        }
+        // Weapon
+        if (item instanceof Weapon w && w.getEffects() != null) {
+            for (Effect e : w.getEffects()) if (e instanceof BuffEffect) return true;
+        }
+        // Armor
+        if (item instanceof Armor a && a.getEffects() != null) {
+            for (Effect e : a.getEffects()) if (e instanceof BuffEffect) return true;
+        }
+        return false;
+    }
+
+    public boolean isAttackItem(IComponent item) {
+        // LuckyStone: kiểm tra cả wrapped
+        if (item instanceof LuckyStone) {
+            LuckyStone l = (LuckyStone) item;
+            if (l.getEffects() != null) {
+                for (Effect e : l.getEffects()) if (!(e instanceof BuffEffect)) return true;
+            }
+            if (l.getEffects() != null && isAttackItem((IComponent) l.getComponent()))  return true;
+        }
+        if (item instanceof Weapon w && w.getEffects() != null) {
+            for (Effect e : w.getEffects()) if (!(e instanceof BuffEffect)) return true;
+        }
+        if (item instanceof Armor a && a.getEffects() != null) {
+            for (Effect e : a.getEffects()) if (!(e instanceof BuffEffect)) return true;
+        }
+        return false;
     }
 }

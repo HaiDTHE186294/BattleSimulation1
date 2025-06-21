@@ -15,7 +15,7 @@ public class StartBattleAction implements DialogueAction {
         context.setData("battleRequested", true);
         context.setData("battleId", battleId);
         // Có thể gọi service thực sự ở đây nếu muốn
-        GameController controller = new GameController();
+        GameController controller = new GameController(battleId);
         new MainFrame(controller);
     }
 }

@@ -23,5 +23,10 @@ public class BurnEffect extends AbstractEffect {
         target.takeDamage(damagePerTurn);
     }
 
+    @Override
+    public int getDuration() {
+        return duration;
+    }
+
 
 }

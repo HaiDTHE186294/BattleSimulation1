@@ -29,4 +29,9 @@ public class BuffEffect extends AbstractEffect {
     public void onTurnStart(Person target) {
         System.out.println(target.getName() + " gets buff: " + name);
     }
+
+    @Override
+    public int getDuration() {
+        return duration;
+    }
 }

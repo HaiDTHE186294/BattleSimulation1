@@ -11,14 +11,20 @@
     "id": "staff",
     "name": "Staff",
     "displayName": "Gậy",
-    "power": 7
+    "power": 0,
+    "effects": [
+      { "type": "BuffEffect", "name": "Wisdom", "duration": 2, "bonusAtk": 2, "bonusDef": 1 }
+    ]
   },
   {
     "type": "Weapon",
     "id": "axe",
     "name": "Axe",
     "displayName": "Rìu",
-    "power": 10
+    "power": 10,
+    "effects": [
+      { "type": "BurnEffect", "duration": 5, "damagePerTurn": 4 }
+    ]
   },
   {
     "type": "Armor",
@@ -26,6 +32,27 @@
     "name": "Armor",
     "displayName": "Giáp",
     "defense": 3
+  },
+  {
+    "type": "Weapon",
+    "id": "fire_sword",
+    "name": "Fire Sword",
+    "displayName": "Kiếm Lửa",
+    "power": 6,
+    "effects": [
+      { "type": "BurnEffect", "duration": 2, "damagePerTurn": 4 }
+    ]
+  },
+  {
+    "type": "Weapon",
+    "id": "blessed_staff",
+    "name": "Blessed Staff",
+    "displayName": "Gậy Thánh",
+    "power": 0,
+    "effects": [
+      { "type": "BuffEffect", "name": "Bless", "duration": 3, "bonusAtk": 1, "bonusDef": 3 },
+      { "type": "BuffEffect", "name": "Divine Shield", "duration": 2, "bonusAtk": 0, "bonusDef": 5 }
+    ]
   },
   {
     "type": "LuckyStone",
@@ -37,7 +64,10 @@
       "id": "staff",
       "name": "Staff",
       "displayName": "Gậy",
-      "power": 7
+      "power": 0,
+      "effects": [
+        { "type": "BuffEffect", "name": "Wisdom", "duration": 2, "bonusAtk": 2, "bonusDef": 1 }
+      ]
     }
   }
 ]

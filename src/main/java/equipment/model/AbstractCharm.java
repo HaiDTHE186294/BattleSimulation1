@@ -14,4 +14,8 @@ public abstract class AbstractCharm implements IComponent {
     public void action(Person target) {
         component.action(target);
     }
+
+    public IComponent getComponent() {
+        return component;
+    }
 }

@@ -1,63 +1,93 @@
 [
   {
     "id": "start",
-    "speaker": "OldMan",
-    "text": "Chào con, ngươi đến từ đâu?",
+    "speaker": "Villager",
+    "text": "Xin cứu với! Có quái vật đang tấn công làng chúng tôi!",
     "options": [
       {
-        "text": "Tôi đến từ làng bên.",
-        "nextDialogueId": "node2",
+        "text": "Bình tĩnh, tôi sẽ giúp các bạn.",
+        "nextDialogueId": "prepare_battle"
+      },
+      {
+        "text": "Tôi không quan tâm.",
+        "nextDialogueId": "ignore_village"
+      }
+    ]
+  },
+  {
+    "id": "ignore_village",
+    "speaker": "Villager",
+    "text": "Xin anh mà! Nếu anh không giúp, chúng tôi sẽ bị tiêu diệt mất!",
+    "options": [
+      {
+        "text": "Được rồi, tôi sẽ giúp.",
+        "nextDialogueId": "prepare_battle"
+      },
+      {
+        "text": "Tôi không phải anh hùng.",
+        "nextDialogueId": "end_no_help"
+      }
+    ]
+  },
+  {
+    "id": "end_no_help",
+    "speaker": "Villager",
+    "text": "Chúng tôi không biết phải làm sao nữa...",
+    "options": []
+  },
+  {
+    "id": "prepare_battle",
+    "speaker": "Hero",
+    "text": "Quái vật nào đang tấn công làng các bạn?",
+    "options": [
+      {
+        "text": "Một bầy sói hoang, chúng rất hung dữ!",
+        "nextDialogueId": "wolf_warning"
+      },
+      {
+        "text": "Tôi không biết, chỉ thấy bóng chúng rất lớn.",
+        "nextDialogueId": "mystery_monster"
+      }
+    ]
+  },
+  {
+    "id": "wolf_warning",
+    "speaker": "Villager",
+    "text": "Chúng tôi nghe tiếng sói tru mỗi đêm. Xin hãy đánh bại chúng!",
+    "options": [
+      {
+        "text": "Tôi sẽ tiêu diệt bầy sói.",
+        "nextDialogueId": "start_battle_wolf",
         "actions": [
-          { "type": "startBattle", "battleId": "battle_05" }
+          { "type": "startBattle", "battleId": "wolf_pack" }
         ]
-      },
-      {
-        "text": "Không liên quan tới ông.",
-        "nextDialogueId": "node3"
       }
     ]
   },
   {
-    "id": "node2",
-    "speaker": "OldMan",
-    "text": "Ồ, ta cũng từng sống ở đó. Chúc may mắn trên đường!",
+    "id": "mystery_monster",
+    "speaker": "Villager",
+    "text": "Có thể là con Troll khổng lồ trong rừng...",
     "options": [
       {
-        "text": "Chào tạm biệt.",
-        "nextDialogueId": "node2.1"
-      },
-      {
-        "text": "Cút mẹ ông đi.",
-        "nextDialogueId": "node2.2"
-      },
-      {
-        "text": "Súc sanh.",
-        "nextDialogueId": "node2.3"
+        "text": "Tôi sẽ đối đầu với Troll!",
+        "nextDialogueId": "start_battle_troll",
+        "actions": [
+          { "type": "startBattle", "battleId": "troll_solo" }
+        ]
       }
     ]
   },
   {
-    "id": "node3",
-    "speaker": "OldMan",
-    "text": "Thật bất lịch sự! Ta sẽ không nói chuyện nữa.",
+    "id": "start_battle_wolf",
+    "speaker": "Hero",
+    "text": "Hãy trú ẩn an toàn, tôi sẽ trở lại khi mọi chuyện xong.",
     "options": []
   },
   {
-    "id": "node2.1",
-    "speaker": "OldWoman",
-    "text": "Tao giết mày bây giờ.",
-    "options": []
-  },
-  {
-    "id": "node2.2",
-    "speaker": "OldWoman",
-    "text": "Nói lại lần nữa xem.",
-    "options": []
-  },
-  {
-    "id": "node2.3",
-    "speaker": "OldWoman",
-    "text": "Tao nhớ mặt mày rồi đấy.",
+    "id": "start_battle_troll",
+    "speaker": "Hero",
+    "text": "Tôi sẽ ngăn chặn con quái vật này!",
     "options": []
   }
 ]
