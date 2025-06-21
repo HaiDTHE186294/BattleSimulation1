@@ -1,11 +1,13 @@
 package ui;
 
 import equipment.model.IComponent;
+import equipment.model.LuckyStone;
 import gamecore.GameController;
 import person.model.Soldier;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -17,6 +19,7 @@ public class MainFrame extends JFrame implements GameView, Observer {
     private JPanel playerPanel, enemyPanel;
     private JButton attackBtn, itemBtn, effectBtn, buffBtn, endTurnBtn;
     private JComboBox<String> targetBox, itemBox, buffTargetBox;
+    private final utils.BgmPlayer bgmPlayer = new utils.BgmPlayer();
 
     public MainFrame(GameController controller) {
         this.controller = controller;
@@ -28,7 +31,6 @@ public class MainFrame extends JFrame implements GameView, Observer {
         setSize(1020, 650);
         setLayout(new BorderLayout(10, 10));
 
-        // --- Khởi tạo các thành phần UI ---
         // Log area
         logArea = new JTextArea(10, 40);
         logArea.setEditable(false);
@@ -154,10 +156,10 @@ public class MainFrame extends JFrame implements GameView, Observer {
             combatStatusLabel.setText(isPlayer ? "Đến lượt bạn" : "Đến lượt địch");
         }
 
-        // Cập nhật danh sách vật phẩm
+        // Cập nhật danh sách vật phẩm (bao gồm charm lồng nhau)
         itemBox.removeAllItems();
         if (cur != null) {
-            for (IComponent ic : cur.getEquipmentList()) {
+            for (IComponent ic : getAllEquipmentsRecursive(cur.getEquipmentList())) {
                 itemBox.addItem(ic.getName());
             }
         }
@@ -199,7 +201,24 @@ public class MainFrame extends JFrame implements GameView, Observer {
     }
 
     /**
-     * Cập nhật targetBox theo loại effect của vật phẩm đang chọn
+     * Đệ quy lấy mọi trang bị và charm lồng nhau
+     */
+    private List<IComponent> getAllEquipmentsRecursive(List<IComponent> items) {
+        List<IComponent> result = new ArrayList<>();
+        for (IComponent ic : items) {
+            result.add(ic);
+            if (ic instanceof LuckyStone) {
+                IComponent wrapped = ((LuckyStone) ic).getComponent();
+                if (wrapped != null) {
+                    result.addAll(getAllEquipmentsRecursive(List.of(wrapped)));
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Cập nhật targetBox để cho phép chọn buff/attack cùng lúc nếu vật phẩm có nhiều loại effect
      */
     private void updateTargetBox() {
         targetBox.removeAllItems();
@@ -209,16 +228,20 @@ public class MainFrame extends JFrame implements GameView, Observer {
         boolean isBuff = selectedItem != null && controller.isBuffItem(selectedItem);
         boolean isAttack = selectedItem != null && controller.isAttackItem(selectedItem);
 
-        List<Soldier> targets;
+        List<Soldier> targets = new ArrayList<>();
         if (selectedItem == null) {
-            targets = List.of();
+            // Không có vật phẩm nào được chọn
+        } else if (isAttack && isBuff) {
+            // Vật phẩm vừa có buff vừa có attack, cho chọn cả hai team
+            targets.addAll(controller.getAlive(controller.getEnemyTeam()));
+            targets.addAll(controller.getAlive(controller.getPlayerTeam()));
         } else if (isAttack) {
-            targets = controller.getAlive(controller.getEnemyTeam());
+            targets.addAll(controller.getAlive(controller.getEnemyTeam()));
         } else if (isBuff) {
-            targets = controller.getAlive(controller.getPlayerTeam());
+            targets.addAll(controller.getAlive(controller.getPlayerTeam()));
         } else {
             // Vật phẩm không có effect, vẫn cho phép đánh thường lên địch
-            targets = controller.getAlive(controller.getEnemyTeam());
+            targets.addAll(controller.getAlive(controller.getEnemyTeam()));
         }
         for (Soldier s : targets) targetBox.addItem(s.getName());
     }
@@ -261,7 +284,7 @@ public class MainFrame extends JFrame implements GameView, Observer {
     private IComponent getSelectedWeapon(Soldier cur) {
         String itemName = (String) itemBox.getSelectedItem();
         if (itemName == null || cur == null) return null;
-        for (IComponent w : cur.getEquipmentList()) {
+        for (IComponent w : getAllEquipmentsRecursive(cur.getEquipmentList())) {
             if (w.getName().equals(itemName)) return w;
         }
         return null;

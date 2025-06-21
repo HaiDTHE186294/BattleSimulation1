@@ -13,7 +13,7 @@ public class EffectService {
         target.getActiveEffects().add(effect);
         effect.apply(target);
         effect.onTurnStart(target);
-        effect.reduceDuration(); // Giảm thời gian hiệu ứng ngay khi áp dụng
+        effect.reduceDuration();
     }
 
     // Cập nhật các hiệu ứng theo lượt

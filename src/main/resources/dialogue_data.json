@@ -89,5 +89,61 @@
     "speaker": "Hero",
     "text": "Tôi sẽ ngăn chặn con quái vật này!",
     "options": []
+  },
+  {
+    "id": "wolf_packWin",
+    "speaker": "Villager",
+    "text": "Cảm ơn anh rất nhiều! Nhờ anh mà bầy sói đã bị đánh bại, làng tôi đã an toàn rồi!",
+    "options": [
+      {
+        "text": "Không có gì, việc nên làm thôi.",
+        "nextDialogueId": "end_save_village"
+      }
+    ]
+  },
+  {
+    "id": "wolf_packLose",
+    "speaker": "Villager",
+    "text": "Không! Anh đã thất bại... Bầy sói vẫn hoành hành trong làng...",
+    "options": [
+      {
+        "text": "Tôi sẽ quay lại và thử lại!",
+        "nextDialogueId": "start_battle_wolf",
+        "actions": [
+          { "type": "startBattle", "battleId": "wolf_pack" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "troll_soloWin",
+    "speaker": "Villager",
+    "text": "Anh thật tuyệt vời! Con Troll đã bị đánh bại, chúng tôi biết ơn anh rất nhiều!",
+    "options": [
+      {
+        "text": "Không có gì, tôi rất vui khi giúp đỡ.",
+        "nextDialogueId": "end_save_village"
+      }
+    ]
+  },
+  {
+    "id": "troll_soloLose",
+    "speaker": "Villager",
+    "text": "Con Troll vẫn còn ngoài kia... Xin hãy cứu chúng tôi!",
+    "options": [
+      {
+        "text": "Tôi sẽ không bỏ cuộc!",
+        "nextDialogueId": "start_battle_troll",
+        "actions": [
+          { "type": "startBattle", "battleId": "troll_solo" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "end_save_village",
+    "speaker": "Villager",
+    "text": "Anh đã cứu cả ngôi làng. Mọi người đều biết ơn anh vô cùng!",
+    "options": []
   }
 ]

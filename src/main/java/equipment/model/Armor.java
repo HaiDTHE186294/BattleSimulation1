@@ -60,5 +60,8 @@ public class Armor extends AbstractEquipment {
         return def;
     }
 
-
+    @Override
+    public String toString() {
+        return String.format("%s (DEF+%d)", this.getName(), this.getDefPower());
+    }
 }

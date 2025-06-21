@@ -13,20 +13,20 @@ public class BurnEffect extends AbstractEffect {
 
     @Override
     public void apply(Person target) {
-        System.out.println(target.getName() + " burning in" + duration + " move.");
+        System.out.println(target.getName() + " bắt đầu bị thiêu đốt trong " + duration + " lượt.");
+        target.addEffect(this);
     }
 
     @Override
     public void onTurnStart(Person target) {
         if (isExpired()) return;
-        System.out.println(target.getName() + " take " + damagePerTurn + " damage from burning.");
+        System.out.println(target.getName() + " nhận " + damagePerTurn + " sát thương từ thiêu đốt.");
         target.takeDamage(damagePerTurn);
+        duration--;
     }
 
     @Override
     public int getDuration() {
         return duration;
     }
-
-
 }

@@ -20,14 +20,23 @@ public class CombatManager {
     private int currentTurnIndex = 0;
     private boolean isPlayerTurn = true;
     private Soldier currentSoldier = null;
+    private final String battelId;
+    private CombatEndListener combatEndListener;
+
+
+    public void setCombatEndListener(CombatEndListener listener) {
+        this.combatEndListener = listener;
+    }
 
     public CombatManager(List<Soldier> playerTeam, List<Soldier> enemyTeam,
-                         PersonService personService, EffectService effectService, EquipmentService equipmentService) {
+                         PersonService personService, EffectService effectService, EquipmentService equipmentService, String BattleId) {
         this.playerTeam = playerTeam;
         this.enemyTeam = enemyTeam;
         this.personService = personService;
         this.effectService = effectService;
         this.equipmentService = equipmentService;
+        this.battelId = BattleId;
+
     }
 
     public Soldier getCurrentSoldier() {
@@ -74,7 +83,7 @@ public class CombatManager {
         currentSoldier = null; // Reset cho lượt mới
         currentTurnIndex++;
 
-        // DỌN DẸP NGƯỜI CHẾT NGAY SAU KHI KẾT THÚC LƯỢT
+        // Kiểm tra xem có người chết không, nếu có thì loại bỏ khỏi danh sách
         cleanDead();
 
         List<Soldier> team = isPlayerTurn ? playerTeam : enemyTeam;
@@ -84,6 +93,10 @@ public class CombatManager {
             isPlayerTurn = !isPlayerTurn;
             // Sau khi chuyển lượt, lại cleanDead một lần nữa để đảm bảo danh sách mới
             cleanDead();
+        }
+
+        if (isCombatEnded() && combatEndListener != null) {
+            combatEndListener.onCombatEnded(battelId, isPlayerWin());
         }
     }
 
@@ -117,14 +130,6 @@ public class CombatManager {
         return enemyTeam;
     }
 
-    public void startNewTurn(Soldier soldier) {
-        if (soldier != null && soldier.isAlive()) {
-            // Kích hoạt effect khi bắt đầu lượt
-            for (Effect effect : soldier.getActiveEffects()) {
-                effect.onTurnStart(soldier);
-            }
-        }
-    }
 
     public EffectService getEffectService() {
         return effectService;

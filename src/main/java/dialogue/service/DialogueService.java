@@ -13,6 +13,15 @@ public class DialogueService {
     private final DialogueContext context;
     private final List<DialogueObserver> observers;
 
+    private static DialogueService instance;
+    public static DialogueService getInstance() {
+        if (instance == null) throw new IllegalStateException("DialogueService not initialized!");
+        return instance;
+    }
+    public static void init(List<DialogueModel> dialogues, DialogueContext context) {
+        instance = new DialogueService(dialogues, context);
+    }
+
     public DialogueService(List<DialogueModel> dialogues, DialogueContext context) {
         this.dialogueMap = new HashMap<>();
         this.context = context;

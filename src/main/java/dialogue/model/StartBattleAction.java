@@ -4,6 +4,7 @@ import gamecore.GameController;
 import ui.MainFrame;
 
 public class StartBattleAction implements DialogueAction {
+
     private final String battleId;
 
     public StartBattleAction(String battleId) {
@@ -14,8 +15,8 @@ public class StartBattleAction implements DialogueAction {
     public void execute(DialogueContext context) {
         context.setData("battleRequested", true);
         context.setData("battleId", battleId);
-        // Có thể gọi service thực sự ở đây nếu muốn
         GameController controller = new GameController(battleId);
+        controller.startGame();
         new MainFrame(controller);
     }
 }

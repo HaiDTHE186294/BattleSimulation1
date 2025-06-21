@@ -1,0 +1,162 @@
+[
+  {
+    "id": "vanguard_team",
+    "name": "Vanguard Squad",
+    "members": [
+      {
+        "name": "Vanguard",
+        "role": "Tiên phong",
+        "hp": 110,
+        "status": "ALIVE",
+        "atk": 13,
+        "def": 8,
+        "equipment": [
+          { "type": "Weapon", "name": "Longsword", "displayName": "Kiếm dài", "power": 5 },
+          { "type": "Armor", "name": "Steel Armor", "displayName": "Giáp thép", "defense": 4 }
+        ]
+      },
+      {
+        "name": "Shieldbearer",
+        "role": "Tiên phong",
+        "hp": 120,
+        "status": "ALIVE",
+        "atk": 9,
+        "def": 12,
+        "equipment": [
+          { "type": "Weapon", "name": "Mace", "displayName": "Chùy", "power": 4 },
+          { "type": "Armor", "name": "Tower Shield", "displayName": "Khiên lớn", "defense": 6 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "artillery_team",
+    "name": "Artillery Troop",
+    "members": [
+      {
+        "name": "Cannonier",
+        "role": "Pháo binh",
+        "hp": 85,
+        "status": "ALIVE",
+        "atk": 18,
+        "def": 4,
+        "equipment": [
+          { "type": "Weapon", "name": "Hand Cannon", "displayName": "Pháo tay", "power": 10 }
+        ]
+      },
+      {
+        "name": "Grenadier",
+        "role": "Pháo binh",
+        "hp": 80,
+        "status": "ALIVE",
+        "atk": 16,
+        "def": 5,
+        "equipment": [
+          { "type": "Weapon", "name": "Grenade Launcher", "displayName": "Súng phóng lựu", "power": 8 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "medic_team",
+    "name": "Medical Division",
+    "members": [
+      {
+        "name": "Combat Medic",
+        "role": "Cứu thương",
+        "hp": 75,
+        "status": "ALIVE",
+        "atk": 7,
+        "def": 6,
+        "equipment": [
+          { "type": "Weapon", "name": "Short Staff", "displayName": "Gậy ngắn", "power": 2 }
+        ]
+      },
+      {
+        "name": "Field Doctor",
+        "role": "Cứu thương",
+        "hp": 70,
+        "status": "ALIVE",
+        "atk": 5,
+        "def": 7,
+        "equipment": [
+          { "type": "Weapon", "name": "Surgical Blade", "displayName": "Dao phẫu thuật", "power": 1 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "support_team",
+    "name": "Support Group",
+    "members": [
+      {
+        "name": "Banner Holder",
+        "role": "Hỗ trợ",
+        "hp": 80,
+        "status": "ALIVE",
+        "atk": 8,
+        "def": 5,
+        "equipment": [
+          { "type": "Weapon", "name": "Banner", "displayName": "Cờ hiệu", "power": 0 }
+        ]
+      },
+      {
+        "name": "Tactician",
+        "role": "Hỗ trợ",
+        "hp": 85,
+        "status": "ALIVE",
+        "atk": 10,
+        "def": 5,
+        "equipment": [
+          { "type": "Weapon", "name": "Command Baton", "displayName": "Gậy chỉ huy", "power": 2 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ranger_team",
+    "name": "Ranger Division",
+    "members": [
+      {
+        "name": "Archer",
+        "role": "Cung thủ",
+        "hp": 70,
+        "status": "ALIVE",
+        "atk": 14,
+        "def": 4,
+        "equipment": [
+          { "type": "Weapon", "name": "Longbow", "displayName": "Cung dài", "power": 7 }
+        ]
+      },
+      {
+        "name": "Scout",
+        "role": "Trinh sát",
+        "hp": 65,
+        "status": "ALIVE",
+        "atk": 10,
+        "def": 5,
+        "equipment": [
+          { "type": "Weapon", "name": "Dagger", "displayName": "Dao găm", "power": 3 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "paladin_team",
+    "name": "Paladin Order",
+    "members": [
+      {
+        "name": "Paladin",
+        "role": "Kỵ sĩ",
+        "hp": 130,
+        "status": "ALIVE",
+        "atk": 15,
+        "def": 12,
+        "equipment": [
+          { "type": "Weapon", "name": "Holy Sword", "displayName": "Thánh kiếm", "power": 8 },
+          { "type": "Armor", "name": "Blessed Plate", "displayName": "Giáp phù hộ", "defense": 7 }
+        ]
+      }
+    ]
+  }
+]

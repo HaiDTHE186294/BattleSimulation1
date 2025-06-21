@@ -46,6 +46,14 @@ public class Weapon extends AbstractEquipment {
         int damage = this.atk * 10;
         target.takeDamage(damage);
         System.out.println(getName() + " attacked " + target.getName() + " with " + damage);
+
+        if (effects != null) {
+            for (Effect effect : effects) {
+                if (effect != null) {
+                    effect.apply(target);
+                }
+            }
+        }
     }
 
     @Override
@@ -58,4 +66,8 @@ public class Weapon extends AbstractEquipment {
         return 0;
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s (ATK+%d)", this.getName(), this.getAtkPower());
+    }
 }

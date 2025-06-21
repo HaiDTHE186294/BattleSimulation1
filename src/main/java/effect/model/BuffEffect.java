@@ -22,12 +22,14 @@ public class BuffEffect extends AbstractEffect {
 
     @Override
     public void apply(Person target) {
-        System.out.println(target.getName() + " gains " + bonusAtk + " attack and " + bonusDef + " defense from buff: " + name);
+        System.out.println(target.getName() + " nhận buff: " + name + " +" + bonusAtk + " ATK, +" + bonusDef + " DEF trong " + duration + " lượt.");
+        target.addEffect(this);
     }
 
     @Override
     public void onTurnStart(Person target) {
-        System.out.println(target.getName() + " gets buff: " + name);
+        System.out.println(target.getName() + " duy trì buff: " + name);
+        duration--;
     }
 
     @Override

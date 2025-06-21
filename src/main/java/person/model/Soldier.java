@@ -140,6 +140,13 @@ public class Soldier extends Person {
                 .toList();
     }
 
+    // Trong person.model.Soldier.java
+    @Override
+    public String toString() {
+        return String.format("%s (HP:%d, ATK:%d, DEF:%d)",
+                this.getName(), this.getHealth(), this.getBaseAtk(), this.getBaseDef());
+    }
+
     public List<Effect> getActiveEffects() {
         return activeEffects;
     }

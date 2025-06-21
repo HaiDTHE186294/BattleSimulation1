@@ -1,6 +1,7 @@
 package gamecore;
 
 import combat.CombatManager;
+import dialogue.service.DialogueService;
 import effect.model.BuffEffect;
 import effect.model.BurnEffect;
 import effect.model.Effect;
@@ -14,40 +15,67 @@ import equipment.service.EquipmentService;
 import person.model.PersonStatus;
 import person.model.Soldier;
 import person.service.PersonService;
+import ui.GameView;
+import ui.TeamBuilderFrame;
+import utils.BgmPlayer;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 
 public class GameController extends Observable {
-    private final CombatManager cm;
-    private ui.GameView view;
+    private CombatManager cm;
+    private GameView view;
+    private final BgmPlayer bgmPlayer = new BgmPlayer();
+    private List<Soldier> playerTeam;
+    private final String enemyTeamId;
+
 
     public GameController(String enemyTeamId) {
-        List<Soldier> playerTeam = createPlayerTeam();
+        this.enemyTeamId = enemyTeamId;
+    }
+
+
+    
+
+    public void startGame() {
+        SwingUtilities.invokeLater(() -> {
+            new TeamBuilderFrame(selectedTeam -> {
+                this.playerTeam = selectedTeam;
+                afterTeamSelected();
+            });
+        });
+    }
+
+    private void afterTeamSelected() {
         EffectService effectService = new EffectService();
         EquipmentService equipmentService = new EquipmentService();
         PersonService personService = new PersonService(effectService);
 
         Map<String, IComponent> equipmentMap = loadEquipmentMap("equipment.json");
-        equipPlayerTeam(playerTeam, equipmentMap, equipmentService);
 
         List<Soldier> enemyTeam = loadEnemyTeam(enemyTeamId);
-
-        this.cm = new CombatManager(playerTeam, enemyTeam, personService, effectService, equipmentService);
+        bgmPlayer.play("battle.wav", true);
+        this.cm = new CombatManager(this.playerTeam, enemyTeam, personService, effectService, equipmentService, enemyTeamId);
+        cm.setCombatEndListener((battleId, playerWin) -> {
+            String nextDialogueId = battleId + (playerWin ? "Win" : "Lose");
+            dialogue.service.DialogueService.getInstance().startDialogue(nextDialogueId);
+            // Mở lại UI hội thoại sau trận đấu
+            SwingUtilities.invokeLater(() -> {
+                new dialogue.ui.DialogueAppSwing(
+                        new dialogue.ui.SwingDialogueController(dialogue.service.DialogueService.getInstance()),
+                        dialogue.service.DialogueService.getInstance(),
+                        nextDialogueId
+                );
+            });
+        });
+        if (view != null) view.refresh();
+        setChanged();
+        notifyObservers();
     }
 
-    private List<Soldier> createPlayerTeam() {
-        List<Soldier> team = new ArrayList<>();
-        Soldier alice = new Soldier("Alice", 100, PersonStatus.ALIVE, 10, 5);
-        Soldier bob = new Soldier("Bob", 90, PersonStatus.ALIVE, 8, 6);
-        Soldier charlie = new Soldier("Charlie", 85, PersonStatus.ALIVE, 9, 7);
-        team.add(alice);
-        team.add(bob);
-        team.add(charlie);
-        return team;
-    }
 
     private Map<String, IComponent> loadEquipmentMap(String fileName) {
         try {
@@ -57,24 +85,6 @@ public class GameController extends Observable {
         }
     }
 
-    private void equipPlayerTeam(List<Soldier> playerTeam, Map<String, IComponent> equipmentMap, EquipmentService equipmentService) {
-        Soldier alice = playerTeam.get(0);
-        Soldier bob = playerTeam.get(1);
-        // Soldier charlie = playerTeam.get(2); // Nếu cần trang bị cho Charlie
-
-        IComponent sword = equipmentMap.get("sword");
-        IComponent staff = equipmentMap.get("staff");
-        IComponent axe = equipmentMap.get("axe");
-        IComponent armor = equipmentMap.get("armor");
-        IComponent luckyStaff = equipmentMap.get("lucky_staff");
-
-        equipmentService.equip(alice, sword);
-        equipmentService.equip(alice, staff);
-        equipmentService.equip(alice, armor);
-        equipmentService.equip(bob, axe);
-        equipmentService.equip(bob, sword);
-        equipmentService.equip(alice, luckyStaff);
-    }
 
     private List<Soldier> loadEnemyTeam(String teamId) {
         List<CombatLevelLoader.EnemyTeamDef> allTeams;
@@ -87,7 +97,7 @@ public class GameController extends Observable {
         return CombatLevelLoader.toSoldierList(team);
     }
 
-    public void setView(ui.GameView view) {
+    public void setView(GameView view) {
         this.view = view;
     }
 
@@ -117,18 +127,18 @@ public class GameController extends Observable {
     public void playerUseItem(Soldier user, Soldier target, IComponent w) {
         if (cm.useEquipment(target, w)) {
             // Áp dụng các effect (nếu có)
-            if (w instanceof equipment.model.Weapon) {
-                for (effect.model.Effect effect : ((equipment.model.Weapon) w).getEffects()) {
+            if (w instanceof Weapon) {
+                for (Effect effect : ((Weapon) w).getEffects()) {
                     cm.getEffectService().applyEffect(target, effect);
                 }
             }
-            if (w instanceof equipment.model.Armor) {
-                for (effect.model.Effect effect : ((equipment.model.Armor) w).getEffects()) {
+            if (w instanceof Armor) {
+                for (Effect effect : ((Armor) w).getEffects()) {
                     cm.getEffectService().applyEffect(target, effect);
                 }
             }
-            if (w instanceof equipment.model.LuckyStone) {
-                for (effect.model.Effect effect : ((equipment.model.LuckyStone) w).getEffects()) {
+            if (w instanceof LuckyStone) {
+                for (Effect effect : ((LuckyStone) w).getEffects()) {
                     cm.getEffectService().applyEffect(target, effect);
                 }
             }

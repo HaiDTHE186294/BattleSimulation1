@@ -1,33 +1,24 @@
 package dialogue.ui;
 
 import dialogue.controller.DialogueController;
-import dialogue.service.DialogueLoader;
-import dialogue.model.DialogueContext;
 import dialogue.service.DialogueService;
 import javax.swing.WindowConstants;
-
-
 import javax.swing.*;
 import java.awt.*;
 
 public class DialogueAppSwing {
-    private DialogueController controller;
+    private final DialogueController controller;
     private DialogueUIServiceSwing uiService;
     private JLabel speakerLabel;
     private JTextArea dialogueText;
     private JPanel optionsPanel;
 
-    public DialogueAppSwing() {
+    /**
+     * Khởi tạo UI hội thoại với controller và service có sẵn (KHÔNG tự nạp lại JSON, không tạo DialogueService mới!)
+     */
+    public DialogueAppSwing(DialogueController controller, DialogueService service, String startDialogueId) {
+        this.controller = controller;
         try {
-            System.out.println("Loading dialogues from JSON...");
-            var dialogues = DialogueLoader.loadFromJson("dialogue_data.json");
-            System.out.println("Loaded " + dialogues.size() + " dialogues");
-
-            var context = new DialogueContext();
-            var service = new DialogueService(dialogues, context);
-
-            controller = new SwingDialogueController(service);
-
             JFrame frame = new JFrame("Hội thoại Swing");
             frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             frame.setSize(480, 340);
@@ -54,7 +45,7 @@ public class DialogueAppSwing {
             uiService = new DialogueUIServiceSwing(speakerLabel, dialogueText, optionsPanel, controller);
             service.addObserver(uiService);
 
-            controller.start("start");
+            controller.start(startDialogueId);
 
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
@@ -64,7 +55,23 @@ public class DialogueAppSwing {
         }
     }
 
+    /**
+     * KHÔNG dùng main này để chạy thật! Chỉ để test độc lập UI, không liên kết với game.
+     */
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(DialogueAppSwing::new);
+        // Test UI độc lập, không liên kết với game
+        SwingUtilities.invokeLater(() -> {
+            try {
+                var dialogues = dialogue.service.DialogueLoader.loadFromJson("dialogue_data.json");
+                var context = new dialogue.model.DialogueContext();
+                DialogueService.init(dialogues, context);
+                DialogueService service = DialogueService.getInstance();
+                var controller = new dialogue.ui.SwingDialogueController(service);
+                new DialogueAppSwing(controller, service, "start");
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Failed to start test UI: " + e.getMessage());
+            }
+        });
     }
 }
