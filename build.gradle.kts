@@ -9,7 +9,7 @@ repositories {
     mavenCentral()
 }
 application {
-    mainClass = "org.example.Main" // Thay bằng tên class chứa hàm main của bạn
+    mainClass = "dialogue.ui.DialogueAppSwing"
 }
 dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.17.1")

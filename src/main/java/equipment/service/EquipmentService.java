@@ -12,7 +12,15 @@ import java.util.List;
 
 public class EquipmentService {
 
-    EffectService effectService;
+    private final EffectService effectService;
+
+    public EquipmentService(EffectService effectService) {
+        this.effectService = effectService;
+    }
+
+    public EquipmentService() {
+        this(null);
+    }
 
     public void equip(Soldier soldier, IComponent item) {
         soldier.equip(item);
@@ -37,17 +45,25 @@ public class EquipmentService {
     }
 
     private void triggerEffectOnEquip(Soldier soldier, IComponent item) {
-        // Chỉ kích hoạt effect nếu item là Armor và có hiệu ứng
-        if (item instanceof Armor armor) {
+        if (item instanceof Armor armor && effectService != null) {
             for (Effect effect : armor.getEffects()) {
-                soldier.addEffect(effect);
+                effectService.applyEffect(soldier, effect);
             }
         }
     }
-
     public void triggerActionOnEquip(Soldier target, IComponent item) {
-        // Chỉ kích hoạt effect nếu item là Wp và có hiệu ứng
+        // Kích hoạt action của item
         item.action(target);
+
+        // Áp dụng effect từ vũ khí
+        if (item instanceof Weapon weapon && effectService != null) {
+            for (Effect effect : weapon.getEffects()) {
+                if (effect != null) {
+                    effectService.applyEffect(target, effect);
+                    System.out.println("Applied effect " + effect.getName() + " from " + weapon.getName() + " to " + target.getName());
+                }
+            }
+        }
     }
 
     private void notifyEquipmentChanged(Soldier soldier) {

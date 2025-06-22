@@ -13,7 +13,7 @@
     "displayName": "Gậy",
     "power": 0,
     "effects": [
-      { "type": "BuffEffect", "name": "Wisdom", "duration": 2, "bonusAtk": 2, "bonusDef": 1 }
+      { "type": "BuffEffect", "name": "Wisdom", "duration": 6, "bonusAtk": 2, "bonusDef": 1 }
     ]
   },
   {
@@ -40,7 +40,7 @@
     "displayName": "Kiếm Lửa",
     "power": 6,
     "effects": [
-      { "type": "BurnEffect", "duration": 2, "damagePerTurn": 4 }
+      { "type": "BurnEffect", "duration": 6, "damagePerTurn": 4 }
     ]
   },
   {
@@ -51,7 +51,7 @@
     "power": 0,
     "effects": [
       { "type": "BuffEffect", "name": "Bless", "duration": 3, "bonusAtk": 1, "bonusDef": 3 },
-      { "type": "BuffEffect", "name": "Divine Shield", "duration": 2, "bonusAtk": 0, "bonusDef": 5 }
+      { "type": "BuffEffect", "name": "Divine Shield", "duration": 6, "bonusAtk": 0, "bonusDef": 5 }
     ]
   },
   {
@@ -66,7 +66,7 @@
       "displayName": "Gậy",
       "power": 0,
       "effects": [
-        { "type": "BuffEffect", "name": "Wisdom", "duration": 2, "bonusAtk": 2, "bonusDef": 1 }
+        { "type": "BuffEffect", "name": "Wisdom", "duration": 6, "bonusAtk": 2, "bonusDef": 1 }
       ]
     }
   }

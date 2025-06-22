@@ -4,14 +4,8 @@
     "speaker": "Villager",
     "text": "Xin cứu với! Có quái vật đang tấn công làng chúng tôi!",
     "options": [
-      {
-        "text": "Bình tĩnh, tôi sẽ giúp các bạn.",
-        "nextDialogueId": "prepare_battle"
-      },
-      {
-        "text": "Tôi không quan tâm.",
-        "nextDialogueId": "ignore_village"
-      }
+      { "text": "Bình tĩnh, tôi sẽ giúp các bạn.", "nextDialogueId": "prepare_battle" },
+      { "text": "Tôi không quan tâm.", "nextDialogueId": "ignore_village" }
     ]
   },
   {
@@ -19,14 +13,8 @@
     "speaker": "Villager",
     "text": "Xin anh mà! Nếu anh không giúp, chúng tôi sẽ bị tiêu diệt mất!",
     "options": [
-      {
-        "text": "Được rồi, tôi sẽ giúp.",
-        "nextDialogueId": "prepare_battle"
-      },
-      {
-        "text": "Tôi không phải anh hùng.",
-        "nextDialogueId": "end_no_help"
-      }
+      { "text": "Được rồi, tôi sẽ giúp.", "nextDialogueId": "prepare_battle" },
+      { "text": "Tôi không phải anh hùng.", "nextDialogueId": "end_no_help" }
     ]
   },
   {
@@ -40,14 +28,8 @@
     "speaker": "Hero",
     "text": "Quái vật nào đang tấn công làng các bạn?",
     "options": [
-      {
-        "text": "Một bầy sói hoang, chúng rất hung dữ!",
-        "nextDialogueId": "wolf_warning"
-      },
-      {
-        "text": "Tôi không biết, chỉ thấy bóng chúng rất lớn.",
-        "nextDialogueId": "mystery_monster"
-      }
+      { "text": "Một bầy sói hoang, chúng rất hung dữ!", "nextDialogueId": "wolf_warning" },
+      { "text": "Tôi không biết, chỉ thấy bóng chúng rất lớn.", "nextDialogueId": "mystery_monster" }
     ]
   },
   {
@@ -58,9 +40,7 @@
       {
         "text": "Tôi sẽ tiêu diệt bầy sói.",
         "nextDialogueId": "start_battle_wolf",
-        "actions": [
-          { "type": "startBattle", "battleId": "wolf_pack" }
-        ]
+        "actions": [ { "type": "startBattle", "battleId": "wolf_pack" } ]
       }
     ]
   },
@@ -72,9 +52,7 @@
       {
         "text": "Tôi sẽ đối đầu với Troll!",
         "nextDialogueId": "start_battle_troll",
-        "actions": [
-          { "type": "startBattle", "battleId": "troll_solo" }
-        ]
+        "actions": [ { "type": "startBattle", "battleId": "troll_solo" } ]
       }
     ]
   },
@@ -95,10 +73,7 @@
     "speaker": "Villager",
     "text": "Cảm ơn anh rất nhiều! Nhờ anh mà bầy sói đã bị đánh bại, làng tôi đã an toàn rồi!",
     "options": [
-      {
-        "text": "Không có gì, việc nên làm thôi.",
-        "nextDialogueId": "end_save_village"
-      }
+      { "text": "Không có gì, việc nên làm thôi.", "nextDialogueId": "after_wolf" }
     ]
   },
   {
@@ -109,41 +84,141 @@
       {
         "text": "Tôi sẽ quay lại và thử lại!",
         "nextDialogueId": "start_battle_wolf",
-        "actions": [
-          { "type": "startBattle", "battleId": "wolf_pack" }
-        ]
+        "actions": [ { "type": "startBattle", "battleId": "wolf_pack" } ]
       }
+    ]
+  },
+  {
+    "id": "after_wolf",
+    "speaker": "Mysterious Girl",
+    "text": "Cảm ơn anh đã cứu mọi người... Nhưng xin đừng vào rừng sâu phía Tây.",
+    "options": [
+      { "text": "Tại sao vậy?", "nextDialogueId": "girl_warning" },
+      { "text": "Tôi sẽ đi nếu muốn.", "nextDialogueId": "go_west_forest" }
+    ]
+  },
+  {
+    "id": "girl_warning",
+    "speaker": "Mysterious Girl",
+    "text": "Ở đó chỉ có đau khổ. Quá khứ của tôi nằm ở đó... Anh sẽ không thể thay đổi điều gì đâu.",
+    "options": [
+      { "text": "Tôi muốn giúp em.", "nextDialogueId": "girl_reveal" },
+      { "text": "Tôi sẽ nghe lời em.", "nextDialogueId": "end_girl_trust" }
+    ]
+  },
+  {
+    "id": "end_girl_trust",
+    "speaker": "Mysterious Girl",
+    "text": "Cảm ơn anh... Em mong anh sẽ không phải đau lòng như em.",
+    "options": []
+  },
+  {
+    "id": "girl_reveal",
+    "speaker": "Mysterious Girl",
+    "text": "Em từng là con gái của trưởng làng. Nhưng vì tình yêu với một kẻ bị nguyền rủa, em đã mất tất cả...",
+    "options": [
+      { "text": "Em yêu một ai?", "nextDialogueId": "love_reveal" },
+      { "text": "Tôi sẽ giúp em chuộc lại lỗi lầm.", "nextDialogueId": "go_west_forest" }
+    ]
+  },
+  {
+    "id": "love_reveal",
+    "speaker": "Mysterious Girl",
+    "text": "Anh ấy chính là Troll mà anh sắp đối đầu. Anh ấy từng là người, bị biến thành quái vật vì bảo vệ em.",
+    "options": [
+      { "text": "Tôi... không biết phải làm gì.", "nextDialogueId": "girl_plead" }
+    ]
+  },
+  {
+    "id": "girl_plead",
+    "speaker": "Mysterious Girl",
+    "text": "Nếu có thể, xin hãy tha thứ cho anh ấy. Đừng giết anh ấy nếu không cần thiết.",
+    "options": [
+      { "text": "Tôi sẽ thử nói chuyện trước.", "nextDialogueId": "pre_battle_troll" },
+      { "text": "Chỉ có cái chết mới giải thoát cho anh ta.", "nextDialogueId": "start_battle_troll", "actions": [ { "type": "startBattle", "battleId": "troll_solo" } ] }
+    ]
+  },
+  {
+    "id": "pre_battle_troll",
+    "speaker": "Hero",
+    "text": "Troll! Ngươi còn nhớ gì về quá khứ không?",
+    "options": [
+      { "text": "Nói chuyện với Troll.", "nextDialogueId": "troll_speaks" }
+    ]
+  },
+  {
+    "id": "troll_speaks",
+    "speaker": "Troll",
+    "text": "Grrr... Đau đớn... Giận dữ... Nhưng... mùi hương này... Ta nhớ ra rồi... Anna...",
+    "options": [
+      { "text": "Troll, Anna vẫn yêu ngươi!", "nextDialogueId": "troll_cries" }
+    ]
+  },
+  {
+    "id": "troll_cries",
+    "speaker": "Troll",
+    "text": "Ta... không muốn làm hại ai nữa... Nhưng ta không kiểm soát được bản thân!",
+    "options": [
+      { "text": "Ta sẽ giúp ngươi giải thoát.", "nextDialogueId": "start_battle_troll", "actions": [ { "type": "startBattle", "battleId": "troll_solo" } ] },
+      { "text": "Ta sẽ không đánh, hãy cố gắng kiềm chế!", "nextDialogueId": "troll_struggles" }
+    ]
+  },
+  {
+    "id": "troll_struggles",
+    "speaker": "Troll",
+    "text": "Không... KHÔNG!!! Ta không thể... RAAAAA!",
+    "options": [
+      { "text": "Chiến đấu là không thể tránh khỏi.", "nextDialogueId": "start_battle_troll", "actions": [ { "type": "startBattle", "battleId": "troll_solo" } ] }
     ]
   },
   {
     "id": "troll_soloWin",
-    "speaker": "Villager",
-    "text": "Anh thật tuyệt vời! Con Troll đã bị đánh bại, chúng tôi biết ơn anh rất nhiều!",
+    "speaker": "Mysterious Girl",
+    "text": "Anh ấy... đã ra đi. Anh có thể tha thứ cho em không?",
     "options": [
-      {
-        "text": "Không có gì, tôi rất vui khi giúp đỡ.",
-        "nextDialogueId": "end_save_village"
-      }
+      { "text": "Em không có lỗi, em xứng đáng được hạnh phúc.", "nextDialogueId": "girl_cry" },
+      { "text": "Tôi cũng từng mất người thân, tôi hiểu cảm giác của em.", "nextDialogueId": "girl_cry" }
     ]
   },
   {
     "id": "troll_soloLose",
-    "speaker": "Villager",
-    "text": "Con Troll vẫn còn ngoài kia... Xin hãy cứu chúng tôi!",
+    "speaker": "Mysterious Girl",
+    "text": "Anh đã thất bại... Anh ấy vẫn là nỗi đau của em.",
     "options": [
       {
-        "text": "Tôi sẽ không bỏ cuộc!",
+        "text": "Tôi sẽ quay lại và thử lại!",
         "nextDialogueId": "start_battle_troll",
-        "actions": [
-          { "type": "startBattle", "battleId": "troll_solo" }
-        ]
+        "actions": [ { "type": "startBattle", "battleId": "troll_solo" } ]
       }
     ]
   },
   {
-    "id": "end_save_village",
-    "speaker": "Villager",
-    "text": "Anh đã cứu cả ngôi làng. Mọi người đều biết ơn anh vô cùng!",
+    "id": "girl_cry",
+    "speaker": "Mysterious Girl",
+    "text": "Em chỉ ước mọi thứ có thể quay lại như xưa... Nhưng giờ chỉ còn em với nỗi nhớ...",
+    "options": [
+      { "text": "Anh sẽ ở lại bên em.", "nextDialogueId": "end_sad_love1" },
+      { "text": "Em phải mạnh mẽ tiếp tục sống.", "nextDialogueId": "end_sad_love2" }
+    ]
+  },
+  {
+    "id": "end_sad_love2",
+    "speaker": "Narration",
+    "text": "Dưới ánh hoàng hôn, tiếng khóc của Anna vang vọng mãi trong rừng. Người hùng ra đi, để lại sau lưng một trái tim tan vỡ và một hồn ma vẫn chưa được tha thứ...",
     "options": []
-  }
+  },
+  {
+    "id": "end_sad_love1",
+    "speaker": "Anna",
+    "text": "Em xin lỗi nhưng không thể nào quên được quá khứ.",
+    "options": [
+      { "text": "Anh hiểu rồi.", "nextDialogueId": "end_end_sad_love1" }
+    ]
+  },
+    {
+        "id": "end_end_sad_love1",
+        "speaker": "Narration",
+        "text": "Người hùng rời khỏi rừng, để lại Anna một mình với nỗi đau và những kỷ niệm không thể xóa nhòa. Câu chuyện của họ sẽ mãi là một bí mật trong lòng rừng sâu.",
+        "options": []
+    }
 ]

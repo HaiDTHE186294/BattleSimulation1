@@ -16,6 +16,7 @@ import person.model.PersonStatus;
 import person.model.Soldier;
 import person.service.PersonService;
 import ui.GameView;
+import ui.MainFrame;
 import ui.TeamBuilderFrame;
 import utils.BgmPlayer;
 
@@ -38,22 +39,24 @@ public class GameController extends Observable {
     }
 
 
-    
+
+
 
     public void startGame() {
         SwingUtilities.invokeLater(() -> {
+            EffectService effectService = new EffectService();
             new TeamBuilderFrame(selectedTeam -> {
                 this.playerTeam = selectedTeam;
-                afterTeamSelected();
-            });
+                afterTeamSelected(effectService);
+            }, effectService);
         });
     }
 
-    private void afterTeamSelected() {
-        EffectService effectService = new EffectService();
-        EquipmentService equipmentService = new EquipmentService();
+    private void afterTeamSelected(EffectService effectService) {
+        EquipmentService equipmentService = new EquipmentService(effectService);
         PersonService personService = new PersonService(effectService);
 
+        EquipmentLoader.setEffectService(effectService);
         Map<String, IComponent> equipmentMap = loadEquipmentMap("equipment.json");
 
         List<Soldier> enemyTeam = loadEnemyTeam(enemyTeamId);
@@ -71,9 +74,12 @@ public class GameController extends Observable {
                 );
             });
         });
-        if (view != null) view.refresh();
-        setChanged();
-        notifyObservers();
+        SwingUtilities.invokeLater(() -> {
+            new MainFrame(this);
+            if (view != null) view.refresh();
+            setChanged();
+            notifyObservers();
+        });
     }
 
 
@@ -125,26 +131,10 @@ public class GameController extends Observable {
     }
 
     public void playerUseItem(Soldier user, Soldier target, IComponent w) {
-        if (cm.useEquipment(target, w)) {
-            // Áp dụng các effect (nếu có)
-            if (w instanceof Weapon) {
-                for (Effect effect : ((Weapon) w).getEffects()) {
-                    cm.getEffectService().applyEffect(target, effect);
-                }
-            }
-            if (w instanceof Armor) {
-                for (Effect effect : ((Armor) w).getEffects()) {
-                    cm.getEffectService().applyEffect(target, effect);
-                }
-            }
-            if (w instanceof LuckyStone) {
-                for (Effect effect : ((LuckyStone) w).getEffects()) {
-                    cm.getEffectService().applyEffect(target, effect);
-                }
-            }
+        cm.useEquipment(target, w);
             notifyLog(user.getName() + " uses " + w.getName() + " on " + target.getName() + "!");
             endTurnAndAutoEnemy();
-        }
+
     }
 
     public void playerBurn(Soldier target) {

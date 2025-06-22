@@ -3,9 +3,12 @@ package ui;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import effect.service.EffectService;
 import equipment.model.IComponent;
 import equipment.model.Weapon;
 import equipment.model.Armor;
+import equipment.model.LuckyStone;
+import equipment.service.EquipmentLoader;
 import person.model.PersonStatus;
 import person.model.Soldier;
 
@@ -35,8 +38,10 @@ public class TeamBuilderFrame extends JFrame {
 
     // State
     private Map<String, List<IComponent>> soldierEquipmentMap = new HashMap<>();
+    private final EffectService effectService;
 
-    public TeamBuilderFrame(TeamSelectionListener callback) {
+    public TeamBuilderFrame(TeamSelectionListener callback, EffectService effectService) {
+        this.effectService = effectService;
         setTitle("Chọn đội hình và trang bị");
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setSize(1000, 600);
@@ -44,6 +49,8 @@ public class TeamBuilderFrame extends JFrame {
 
         // Load data
         loadTeams();
+        // Set EffectService cho EquipmentLoader trước khi load equipment
+        EquipmentLoader.setEffectService(effectService);
         loadEquipment();
 
         // UI setup
@@ -105,7 +112,36 @@ public class TeamBuilderFrame extends JFrame {
             if (selSoldier == null || selEquip == null) return;
             List<IComponent> equips = soldierEquipmentMap.get(selSoldier.getName());
             if (equips == null) return;
-            equips.add(selEquip);
+
+            // Clone trang bị trước khi gán
+            if (selEquip instanceof Weapon weapon) {
+                Weapon clonedWeapon = new Weapon(weapon.getName(), weapon.getType(), weapon.getAtkPower(), effectService);
+                clonedWeapon.setEffects(weapon.getEffects());
+                equips.add(clonedWeapon);
+            } else if (selEquip instanceof Armor armor) {
+                Armor clonedArmor = new Armor(armor.getName(), armor.getArmorType(), armor.getDefPower());
+                clonedArmor.setEffects(armor.getEffects());
+                equips.add(clonedArmor);
+            } else if (selEquip instanceof LuckyStone luckyStone) {
+                // Clone wrapped component first
+                IComponent wrappedClone = null;
+                IComponent wrapped = luckyStone.getComponent();
+                if (wrapped instanceof Weapon weapon) {
+                    Weapon clonedWeapon = new Weapon(weapon.getName(), weapon.getType(), weapon.getAtkPower(), effectService);
+                    clonedWeapon.setEffects(weapon.getEffects());
+                    wrappedClone = clonedWeapon;
+                } else if (wrapped instanceof Armor armor) {
+                    Armor clonedArmor = new Armor(armor.getName(), armor.getArmorType(), armor.getDefPower());
+                    clonedArmor.setEffects(armor.getEffects());
+                    wrappedClone = clonedArmor;
+                }
+                if (wrappedClone != null) {
+                    LuckyStone clonedStone = new LuckyStone(wrappedClone, effectService);
+                    clonedStone.setEffects(luckyStone.getEffects());
+                    equips.add(clonedStone);
+                }
+            }
+
             JOptionPane.showMessageDialog(this, "Đã gán "+selEquip.getName()+" cho "+selSoldier.getName());
         });
 
@@ -119,8 +155,11 @@ public class TeamBuilderFrame extends JFrame {
             }
             List<Soldier> result = Collections.list(chosenListModel.elements());
             JOptionPane.showMessageDialog(this, "Đội hình đã xác nhận! Số thành viên: "+result.size());
-            if (callback != null) callback.onTeamSelected(result);
             dispose();
+            if (callback != null) {
+                // Đảm bảo callback được gọi trong EDT
+                SwingUtilities.invokeLater(() -> callback.onTeamSelected(result));
+            }
         });
 
         setVisible(true);
@@ -158,28 +197,7 @@ public class TeamBuilderFrame extends JFrame {
 
     private void loadEquipment() {
         try {
-            allEquipment = new ArrayList<>();
-            ObjectMapper mapper = new ObjectMapper();
-            InputStream is = getClass().getClassLoader().getResourceAsStream("equipment.json");
-            List<Map<String,Object>> eqList = mapper.readValue(is, new TypeReference<List<Map<String,Object>>>(){});
-            for (Map<String,Object> eq : eqList) {
-                String type = (String)eq.get("type");
-                if ("Weapon".equals(type)) {
-                    allEquipment.add(new Weapon(
-                            (String) eq.get("name"),
-                            (String) eq.get("displayName"),
-                            (Integer) eq.get("power")
-                    ));
-                }
-                if ("Armor".equals(type)) {
-                    allEquipment.add(new Armor(
-                            (String) eq.get("name"),
-                            (String) eq.get("displayName"),
-                            (Integer) eq.get("defense")
-                    ));
-                }
-                // Có thể mở rộng LuckyStone, Accessory... tại đây
-            }
+            allEquipment = new ArrayList<>(EquipmentLoader.loadEquipmentMap("equipment.json").values());
         } catch (Exception e) {
             System.err.println("Lỗi khi tải trang bị: >" + e.getMessage());
             allEquipment = new ArrayList<>();

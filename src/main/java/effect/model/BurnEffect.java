@@ -29,4 +29,14 @@ public class BurnEffect extends AbstractEffect {
     public int getDuration() {
         return duration;
     }
+
+    @Override
+    public String getName() {
+        return "Burn";
+    }
+
+    @Override
+    public Effect copyEffect() {
+        return new BurnEffect(getDuration(), damagePerTurn);
+    }
 }

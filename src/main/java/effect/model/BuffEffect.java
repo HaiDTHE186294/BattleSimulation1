@@ -36,4 +36,15 @@ public class BuffEffect extends AbstractEffect {
     public int getDuration() {
         return duration;
     }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public Effect copyEffect() {
+        return new BuffEffect(name, getDuration(), bonusAtk, bonusDef);
+    }
+
 }

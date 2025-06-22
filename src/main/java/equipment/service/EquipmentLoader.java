@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import effect.model.BuffEffect;
 import effect.model.BurnEffect;
 import effect.model.Effect;
+import effect.service.EffectService;
 import equipment.model.Armor;
 import equipment.model.IComponent;
 import equipment.model.LuckyStone;
@@ -18,6 +19,11 @@ import java.util.List;
 import java.util.Map;
 
 public class EquipmentLoader {
+    private static EffectService effectService;
+
+    public static void setEffectService(EffectService service) {
+        effectService = service;
+    }
 
     public static class EffectDef {
         public String type;
@@ -51,13 +57,20 @@ public class EquipmentLoader {
         if (def.effects != null) {
             for (EffectDef edef : def.effects) {
                 Effect e = parseEffect(edef);
-                if (e != null) effects.add(e);
+                if (e != null) {
+                    effects.add(e.copyEffect());
+                    System.out.println("Added effect " + e.getName() + " to " + def.name);
+                }
             }
         }
 
         if ("Weapon".equalsIgnoreCase(def.type)) {
-            Weapon weapon = new Weapon(def.name, def.displayName, def.power == null ? 0 : def.power);
+            Weapon weapon = new Weapon(def.displayName, def.id, def.power == null ? 0 : def.power, effectService);
             weapon.setEffects(effects);
+            System.out.println("Created weapon " + weapon.getName() + " (type: " + def.id + ") with " + effects.size() + " effects");
+            for (Effect e : effects) {
+                System.out.println(" - Effect: " + e.getName() + ", Duration: " + e.getDuration());
+            }
             return weapon;
         }
         if ("Armor".equalsIgnoreCase(def.type)) {
@@ -80,7 +93,7 @@ public class EquipmentLoader {
                     wrapped = parseComponent(wrappedDef, mapper, equipmentMap);
                 }
                 if (wrapped != null) {
-                    LuckyStone luckyStone = new LuckyStone(wrapped);
+                    LuckyStone luckyStone = new LuckyStone(wrapped, effectService);
                     // LuckyStone có thể có hiệu ứng riêng
                     luckyStone.setEffects(effects);
                     return luckyStone;
@@ -128,7 +141,6 @@ public class EquipmentLoader {
                     def.bonusDef != null ? def.bonusDef : 0
             );
         }
-        // Thêm các loại effect khác ở đây nếu có
         return null;
     }
 }

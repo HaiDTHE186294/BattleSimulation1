@@ -17,6 +17,5 @@ public class StartBattleAction implements DialogueAction {
         context.setData("battleId", battleId);
         GameController controller = new GameController(battleId);
         controller.startGame();
-        new MainFrame(controller);
     }
 }

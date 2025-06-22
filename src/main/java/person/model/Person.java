@@ -89,12 +89,10 @@ public abstract class Person {
 
     public void addEffect(Effect effect) {
         activeEffects.add(effect);
-        effect.apply(this);
     }
 
     public void removeEffect(Effect effect) {
         if (activeEffects.remove(effect)) {
-            activeEffects.remove(effect);
             System.out.println(getName() + " removed " + effect.getName());
         }
     }
@@ -102,20 +100,6 @@ public abstract class Person {
     public List<Effect> getActiveEffects() {
         return activeEffects;
     }
-
-    public void startTurn() {
-        Iterator<Effect> it = activeEffects.iterator();
-        while (it.hasNext()) {
-            Effect effect = it.next();
-            effect.onTurnStart(this);
-            if (effect.isExpired()) {
-                System.out.println(getName() + " ended " + effect.getName());
-                it.remove();
-            }
-        }
-    }
-
-
 
 
 }

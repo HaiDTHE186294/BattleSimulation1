@@ -1,33 +1,45 @@
 package effect.service;
 
 import effect.model.Effect;
-import person.model.Person;
 import person.model.Soldier;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EffectService {
 
     // Áp dụng hiệu ứng vào một Soldier
     public void applyEffect(Soldier target, Effect effect) {
-        target.getActiveEffects().add(effect);
+        if (target == null || effect == null) return;
         effect.apply(target);
-        effect.onTurnStart(target);
-        effect.reduceDuration();
     }
 
     // Cập nhật các hiệu ứng theo lượt
     public void updateEffects(Soldier target) {
+        if (target == null) return;
         List<Effect> effects = target.getActiveEffects();
-        effects.removeIf(effect -> {
+        if (effects == null) return;
+
+        // Thu thập các effect hết hạn
+        List<Effect> expired = new ArrayList<>();
+        for (Effect effect : new ArrayList<>(effects)) {
+            if (effect == null) {
+                expired.add(effect);
+                continue;
+            }
             effect.reduceDuration();
             if (effect.isExpired()) {
+                expired.add(effect);
+            }
+        }
+        // Xóa ngoài vòng lặp và gọi onExpire an toàn
+        for (Effect effect : expired) {
+            effects.remove(effect);
+            if (effect != null) {
                 effect.onExpire(target);
                 System.out.println("Effect " + effect.getName() + " was end on " + target.getName());
-                return true; // remove
             }
-            return false;
-        });
+        }
     }
 
     // Gỡ thủ công một hiệu ứng nào đó

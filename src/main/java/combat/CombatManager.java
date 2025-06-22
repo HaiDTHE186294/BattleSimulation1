@@ -48,9 +48,9 @@ public class CombatManager {
         }
         if (currentTurnIndex < team.size()) {
             currentSoldier = team.get(currentTurnIndex);
-            if (currentSoldier.isAlive()) {
-                effectService.activateEffects(currentSoldier);
-            }
+//            if (currentSoldier.isAlive()) {
+//                effectService.activateEffects(currentSoldier);
+//            }
             return currentSoldier;
         }
         return null;

@@ -11,6 +11,6 @@ public interface Effect {
     void reduceDuration();
     void onExpire(Person target);
     int getDuration();
-
+    Effect copyEffect();
 
 }

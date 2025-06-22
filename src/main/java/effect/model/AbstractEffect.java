@@ -31,4 +31,5 @@ public abstract class AbstractEffect implements Effect {
         target.removeEffect(this);
     }
 
+
 }
