@@ -13,11 +13,11 @@ import equipment.model.LuckyStone;
 import equipment.model.Weapon;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+/**
+ * Loader for equipment and effects from resource definitions.
+ */
 public class EquipmentLoader {
     private static EffectService effectService;
 
@@ -25,6 +25,7 @@ public class EquipmentLoader {
         effectService = service;
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class EffectDef {
         public String type;
         public String name;
@@ -32,7 +33,6 @@ public class EquipmentLoader {
         public Integer bonusAtk;
         public Integer bonusDef;
         public Integer damagePerTurn;
-        // add more effect params here if needed
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -41,106 +41,145 @@ public class EquipmentLoader {
         public String id;
         public String name;
         public String displayName;
-        public Integer power;     // for Weapon
-        public Integer defense;   // for Armor
-        public Map<String, Object> wrapped; // for LuckyStone bọc trang bị khác
-        public List<EffectDef> effects;     // List effect
+        public Integer power;     // For Weapon
+        public Integer defense;   // For Armor
+        public Map<String, Object> wrapped; // For LuckyStone wrapping another equipment
+        public List<EffectDef> effects;     // List of effects
     }
 
     /**
-     * Parse một equipment object từ EquipmentDef.
-     * Nếu là LuckyStone thì parse đệ quy trường "wrapped".
-     * Gán effect nếu có.
+     * Main method to load equipment map from a resource file.
+     * @param resourceName Name of the resource file in classpath.
+     * @return Map of equipment, keyed by id (or name if id is null)
+     * @throws Exception if resource not found or parsing fails.
      */
-    private static IComponent parseComponent(EquipmentDef def, ObjectMapper mapper, Map<String, IComponent> equipmentMap) {
-        List<Effect> effects = new ArrayList<>();
-        if (def.effects != null) {
-            for (EffectDef edef : def.effects) {
-                Effect e = parseEffect(edef);
-                if (e != null) {
-                    effects.add(e.copyEffect());
-                    System.out.println("Added effect " + e.getName() + " to " + def.name);
-                }
-            }
-        }
-
-        if ("Weapon".equalsIgnoreCase(def.type)) {
-            Weapon weapon = new Weapon(def.displayName, def.id, def.power == null ? 0 : def.power, effectService);
-            weapon.setEffects(effects);
-            System.out.println("Created weapon " + weapon.getName() + " (type: " + def.id + ") with " + effects.size() + " effects");
-            for (Effect e : effects) {
-                System.out.println(" - Effect: " + e.getName() + ", Duration: " + e.getDuration());
-            }
-            return weapon;
-        }
-        if ("Armor".equalsIgnoreCase(def.type)) {
-            Armor armor = new Armor(def.name, def.displayName, def.defense == null ? 0 : def.defense);
-            armor.setEffects(effects);
-            return armor;
-        }
-        if ("LuckyStone".equalsIgnoreCase(def.type)) {
-            if (def.wrapped != null) {
-                // Ưu tiên lấy wrapped theo id hoặc name từ equipmentMap nếu có
-                String wrappedId = def.wrapped.get("id") != null ? def.wrapped.get("id").toString() : null;
-                IComponent wrapped = null;
-                if (wrappedId != null && equipmentMap != null && equipmentMap.containsKey(wrappedId)) {
-                    wrapped = equipmentMap.get(wrappedId);
-                } else if (def.wrapped.get("name") != null && equipmentMap != null && equipmentMap.containsKey(def.wrapped.get("name").toString())) {
-                    wrapped = equipmentMap.get(def.wrapped.get("name").toString());
-                } else {
-                    // fallback: parse thủ công
-                    EquipmentDef wrappedDef = mapper.convertValue(def.wrapped, EquipmentDef.class);
-                    wrapped = parseComponent(wrappedDef, mapper, equipmentMap);
-                }
-                if (wrapped != null) {
-                    LuckyStone luckyStone = new LuckyStone(wrapped, effectService);
-                    // LuckyStone có thể có hiệu ứng riêng
-                    luckyStone.setEffects(effects);
-                    return luckyStone;
-                }
-            }
-        }
-        return null;
-    }
-
     public static Map<String, IComponent> loadEquipmentMap(String resourceName) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         InputStream is = EquipmentLoader.class.getClassLoader().getResourceAsStream(resourceName);
-        if (is == null) throw new RuntimeException("Không tìm thấy file: " + resourceName);
+        if (is == null) throw new RuntimeException("Resource not found: " + resourceName);
+
         List<EquipmentDef> defs = mapper.readValue(is, new TypeReference<List<EquipmentDef>>() {});
-        Map<String, IComponent> map = new HashMap<>();
-        // Parse không phải LuckyStone trước
+        Map<String, IComponent> equipmentMap = new HashMap<>();
+
+        // First, parse all non-LuckyStone equipment
         for (EquipmentDef def : defs) {
             if (!"LuckyStone".equalsIgnoreCase(def.type)) {
-                IComponent c = parseComponent(def, mapper, map);
-                if (c != null) map.put(def.id != null ? def.id : def.name, c);
+                IComponent component = parseComponent(def, mapper, equipmentMap);
+                if (component != null) {
+                    equipmentMap.put(def.id != null ? def.id : def.name, component);
+                }
             }
         }
-        // Parse LuckyStone sau (có thể bọc các trang bị khác)
+        // Then, parse LuckyStone (may wrap others)
         for (EquipmentDef def : defs) {
             if ("LuckyStone".equalsIgnoreCase(def.type)) {
-                IComponent c = parseComponent(def, mapper, map);
-                if (c != null) map.put(def.id != null ? def.id : def.name, c);
+                IComponent component = parseComponent(def, mapper, equipmentMap);
+                if (component != null) {
+                    equipmentMap.put(def.id != null ? def.id : def.name, component);
+                }
             }
         }
-        return map;
+        return equipmentMap;
     }
 
-    private static Effect parseEffect(EffectDef def) {
-        if ("BurnEffect".equalsIgnoreCase(def.type)) {
-            return new BurnEffect(
-                    def.duration != null ? def.duration : 1,
-                    def.damagePerTurn != null ? def.damagePerTurn : 1
-            );
-        }
-        if ("BuffEffect".equalsIgnoreCase(def.type)) {
-            return new BuffEffect(
-                    def.name != null ? def.name : "Buff",
-                    def.duration != null ? def.duration : 1,
-                    def.bonusAtk != null ? def.bonusAtk : 0,
-                    def.bonusDef != null ? def.bonusDef : 0
-            );
+    /**
+     * Parse a single equipment component from definition.
+     * Recursively parses wrapped LuckyStone if present.
+     */
+    private static IComponent parseComponent(EquipmentDef def, ObjectMapper mapper, Map<String, IComponent> equipmentMap) {
+        List<Effect> effects = parseEffects(def.effects);
+
+        switch (def.type != null ? def.type : "") {
+            case "Weapon":
+            case "weapon":
+                Weapon weapon = new Weapon(
+                        def.displayName,
+                        def.id,
+                        def.power != null ? def.power : 0,
+                        effectService
+                );
+                weapon.setEffects(effects);
+                return weapon;
+
+            case "Armor":
+            case "armor":
+                Armor armor = new Armor(
+                        def.name,
+                        def.displayName,
+                        def.defense != null ? def.defense : 0
+                );
+                armor.setEffects(effects);
+                return armor;
+
+            case "LuckyStone":
+            case "luckystone":
+                if (def.wrapped != null) {
+                    IComponent wrapped = resolveWrappedComponent(def.wrapped, mapper, equipmentMap);
+                    if (wrapped != null) {
+                        LuckyStone luckyStone = new LuckyStone(wrapped, effectService);
+                        luckyStone.setEffects(effects);
+                        return luckyStone;
+                    }
+                }
+                break;
+            default:
+                break;
         }
         return null;
+    }
+
+    /**
+     * Parse list of effects from effect definitions.
+     */
+    private static List<Effect> parseEffects(List<EffectDef> defs) {
+        if (defs == null || defs.isEmpty()) return Collections.emptyList();
+        List<Effect> effects = new ArrayList<>();
+        for (EffectDef edef : defs) {
+            Effect effect = parseEffect(edef);
+            if (effect != null) {
+                effects.add(effect.copyEffect());
+            }
+        }
+        return effects;
+    }
+
+    /**
+     * Parse a single effect from its definition.
+     */
+    private static Effect parseEffect(EffectDef def) {
+        if (def == null || def.type == null) return null;
+        switch (def.type) {
+            case "BurnEffect":
+                return new BurnEffect(
+                        def.duration != null ? def.duration : 1,
+                        def.damagePerTurn != null ? def.damagePerTurn : 1
+                );
+            case "BuffEffect":
+                return new BuffEffect(
+                        def.name != null ? def.name : "Buff",
+                        def.duration != null ? def.duration : 1,
+                        def.bonusAtk != null ? def.bonusAtk : 0,
+                        def.bonusDef != null ? def.bonusDef : 0
+                );
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * Resolve the wrapped component for a LuckyStone, either from map or by parsing recursively.
+     */
+    private static IComponent resolveWrappedComponent(Map<String, Object> wrappedDef, ObjectMapper mapper, Map<String, IComponent> equipmentMap) {
+        String wrappedId = wrappedDef.get("id") != null ? wrappedDef.get("id").toString() : null;
+        if (wrappedId != null && equipmentMap.containsKey(wrappedId)) {
+            return equipmentMap.get(wrappedId);
+        }
+        String wrappedName = wrappedDef.get("name") != null ? wrappedDef.get("name").toString() : null;
+        if (wrappedName != null && equipmentMap.containsKey(wrappedName)) {
+            return equipmentMap.get(wrappedName);
+        }
+        // Fallback: parse manually from definition
+        EquipmentDef nestedDef = mapper.convertValue(wrappedDef, EquipmentDef.class);
+        return parseComponent(nestedDef, mapper, equipmentMap);
     }
 }

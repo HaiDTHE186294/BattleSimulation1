@@ -103,7 +103,7 @@
     "text": "Ở đó chỉ có đau khổ. Quá khứ của tôi nằm ở đó... Anh sẽ không thể thay đổi điều gì đâu.",
     "options": [
       { "text": "Tôi muốn giúp em.", "nextDialogueId": "girl_reveal" },
-      { "text": "Tôi sẽ nghe lời em.", "nextDialogueId": "end_girl_trust" }
+      { "text": "Làm như em xinh lắm ấy.", "nextDialogueId": "end_girl_trust" }
     ]
   },
   {
@@ -115,10 +115,10 @@
   {
     "id": "girl_reveal",
     "speaker": "Mysterious Girl",
-    "text": "Em từng là con gái của trưởng làng. Nhưng vì tình yêu với một kẻ bị nguyền rủa, em đã mất tất cả...",
+    "text": "Em từng là Anna, con gái của trưởng làng. Nhưng vì tình yêu với một kẻ bị nguyền rủa, em đã mất tất cả...",
     "options": [
-      { "text": "Em yêu một ai?", "nextDialogueId": "love_reveal" },
-      { "text": "Tôi sẽ giúp em chuộc lại lỗi lầm.", "nextDialogueId": "go_west_forest" }
+      { "text": "Em yêu thằng nào cơ?", "nextDialogueId": "love_reveal" },
+      { "text": "Không quan tâm, có quái là anh thịt hết.", "nextDialogueId": "go_west_forest" }
     ]
   },
   {
@@ -126,22 +126,22 @@
     "speaker": "Mysterious Girl",
     "text": "Anh ấy chính là Troll mà anh sắp đối đầu. Anh ấy từng là người, bị biến thành quái vật vì bảo vệ em.",
     "options": [
-      { "text": "Tôi... không biết phải làm gì.", "nextDialogueId": "girl_plead" }
+      { "text": "Nghe là thấy kích thích rồi.", "nextDialogueId": "girl_plead" }
     ]
   },
   {
     "id": "girl_plead",
     "speaker": "Mysterious Girl",
-    "text": "Nếu có thể, xin hãy tha thứ cho anh ấy. Đừng giết anh ấy nếu không cần thiết.",
+    "text": "Nếu có thể, xin hãy tha thứ cho anh ấy. Em nguyện làm trâu ngựa báo đáp anh.",
     "options": [
-      { "text": "Tôi sẽ thử nói chuyện trước.", "nextDialogueId": "pre_battle_troll" },
-      { "text": "Chỉ có cái chết mới giải thoát cho anh ta.", "nextDialogueId": "start_battle_troll", "actions": [ { "type": "startBattle", "battleId": "troll_solo" } ] }
+      { "text": "Cô nương yên tâm, quân tử động khẩu bất động thủ.", "nextDialogueId": "pre_battle_troll" },
+      { "text": "Miếng ngon nhớ lâu, đòn đau nhớ mãi.", "nextDialogueId": "start_battle_troll", "actions": [ { "type": "startBattle", "battleId": "troll_solo" } ] }
     ]
   },
   {
     "id": "pre_battle_troll",
     "speaker": "Hero",
-    "text": "Troll! Ngươi còn nhớ gì về quá khứ không?",
+    "text": "Troll! Ngươi còn nhớ gì về vợ mới Anna của ta không?",
     "options": [
       { "text": "Nói chuyện với Troll.", "nextDialogueId": "troll_speaks" }
     ]
@@ -151,7 +151,7 @@
     "speaker": "Troll",
     "text": "Grrr... Đau đớn... Giận dữ... Nhưng... mùi hương này... Ta nhớ ra rồi... Anna...",
     "options": [
-      { "text": "Troll, Anna vẫn yêu ngươi!", "nextDialogueId": "troll_cries" }
+      { "text": "Troll, Anna đã từng yêu ngươi!", "nextDialogueId": "troll_cries" }
     ]
   },
   {
@@ -159,16 +159,16 @@
     "speaker": "Troll",
     "text": "Ta... không muốn làm hại ai nữa... Nhưng ta không kiểm soát được bản thân!",
     "options": [
-      { "text": "Ta sẽ giúp ngươi giải thoát.", "nextDialogueId": "start_battle_troll", "actions": [ { "type": "startBattle", "battleId": "troll_solo" } ] },
-      { "text": "Ta sẽ không đánh, hãy cố gắng kiềm chế!", "nextDialogueId": "troll_struggles" }
+      { "text": "Không quan tâm, vào đây.", "nextDialogueId": "start_battle_troll", "actions": [ { "type": "startBattle", "battleId": "troll_solo" } ] },
+      { "text": "Cho ngươi ra chiêu trước, chấp ngươi 2 tay", "nextDialogueId": "troll_struggles" }
     ]
   },
   {
     "id": "troll_struggles",
     "speaker": "Troll",
-    "text": "Không... KHÔNG!!! Ta không thể... RAAAAA!",
+    "text": " Thằng khốnnnnn ... RAAAAA!",
     "options": [
-      { "text": "Chiến đấu là không thể tránh khỏi.", "nextDialogueId": "start_battle_troll", "actions": [ { "type": "startBattle", "battleId": "troll_solo" } ] }
+      { "text": "Nói đùa thôi, thú vật mới chấp, quân tử ra đòn trước.", "nextDialogueId": "start_battle_troll", "actions": [ { "type": "startBattle", "battleId": "troll_solo" } ] }
     ]
   },
   {
@@ -176,8 +176,8 @@
     "speaker": "Mysterious Girl",
     "text": "Anh ấy... đã ra đi. Anh có thể tha thứ cho em không?",
     "options": [
-      { "text": "Em không có lỗi, em xứng đáng được hạnh phúc.", "nextDialogueId": "girl_cry" },
-      { "text": "Tôi cũng từng mất người thân, tôi hiểu cảm giác của em.", "nextDialogueId": "girl_cry" }
+      { "text": "Em không có lỗi, em xứng đáng được hạnh phúc với anh.", "nextDialogueId": "girl_cry" },
+      { "text": "Tôi cũng từng mất người thân, chúng ta giống nhau.", "nextDialogueId": "girl_cry" }
     ]
   },
   {
@@ -197,8 +197,8 @@
     "speaker": "Mysterious Girl",
     "text": "Em chỉ ước mọi thứ có thể quay lại như xưa... Nhưng giờ chỉ còn em với nỗi nhớ...",
     "options": [
-      { "text": "Anh sẽ ở lại bên em.", "nextDialogueId": "end_sad_love1" },
-      { "text": "Em phải mạnh mẽ tiếp tục sống.", "nextDialogueId": "end_sad_love2" }
+      { "text": "Làm trâu làm ngựa cho anh nhé.", "nextDialogueId": "end_sad_love1" },
+      { "text": "Thì ra là quả lừa.", "nextDialogueId": "end_sad_love2" }
     ]
   },
   {
@@ -212,7 +212,7 @@
     "speaker": "Anna",
     "text": "Em xin lỗi nhưng không thể nào quên được quá khứ.",
     "options": [
-      { "text": "Anh hiểu rồi.", "nextDialogueId": "end_end_sad_love1" }
+      { "text": "Vãi ***.", "nextDialogueId": "end_end_sad_love1" }
     ]
   },
     {

@@ -1,14 +1,17 @@
 package equipment.service;
 
+import effect.model.BuffEffect;
 import effect.service.EffectService;
 import equipment.model.Armor;
 import equipment.model.IComponent;
 import effect.model.Effect;
+import equipment.model.LuckyStone;
 import equipment.model.Weapon;
 import observer.GameObserver;
 import person.model.Soldier;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 public class EquipmentService {
 
@@ -72,5 +75,30 @@ public class EquipmentService {
         }
     }
 
+    public static boolean isBuffItem(IComponent item) {
+        return anyEffectMatches(item, e -> e instanceof BuffEffect);
+    }
+
+    public static boolean isAttackItem(IComponent item) {
+        return anyEffectMatches(item, e -> !(e instanceof BuffEffect));
+    }
+
+    private static boolean anyEffectMatches(IComponent item, Predicate<Effect> predicate) {
+        if (item == null) return false;
+
+        // LuckyStone: kiểm tra hiệu ứng của LuckyStone, rồi đệ quy vào wrapped item
+        if (item instanceof LuckyStone l) {
+            if (l.getEffects() != null && l.getEffects().stream().anyMatch(predicate)) return true;
+            return l.getComponent() != null && anyEffectMatches((IComponent) l.getComponent(), predicate);
+        }
+        // Weapon hoặc Armor: kiểm tra hiệu ứng của chính item
+        if (item instanceof Weapon w && w.getEffects() != null) {
+            return w.getEffects().stream().anyMatch(predicate);
+        }
+        if (item instanceof Armor a && a.getEffects() != null) {
+            return a.getEffects().stream().anyMatch(predicate);
+        }
+        return false;
+    }
 
 }
