@@ -2,6 +2,7 @@ package dialogue.controller;
 
 import dialogue.service.DialogueObserver;
 import dialogue.service.DialogueService;
+import utils.BgmPlayer;
 
 public abstract class DialogueController {
     protected final DialogueService service;
@@ -11,9 +12,23 @@ public abstract class DialogueController {
     }
 
     public void start(String dialogueId) {
+        playBgmForDialogue(dialogueId);
         service.startDialogue(dialogueId);
     }
 
+    private void playBgmForDialogue(String dialogueId) {
+        String bgmPath;
+        switch (dialogueId) {
+            case "troll_soloWin":
+                bgmPath = "sad.wav";
+                break;
+            default:
+                bgmPath = "prepareBattle.wav";
+                break;
+        }
+        BgmPlayer bgmPlayer = BgmPlayer.getInstance();
+        bgmPlayer.play(bgmPath, true);
+    }
     public void chooseOption(int index) {
         service.chooseOption(index);
     }

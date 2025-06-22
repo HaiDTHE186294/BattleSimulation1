@@ -19,7 +19,7 @@ public class MainFrame extends JFrame implements GameView, Observer {
     private JPanel playerPanel, enemyPanel;
     private JButton attackBtn, itemBtn, effectBtn, buffBtn, endTurnBtn;
     private JComboBox<String> targetBox, itemBox, buffTargetBox;
-    private final utils.BgmPlayer bgmPlayer = new utils.BgmPlayer();
+    private final java.util.Set<String> usedItemNames = new java.util.HashSet<>();
 
     public MainFrame(GameController controller) {
         this.controller = controller;
@@ -108,8 +108,11 @@ public class MainFrame extends JFrame implements GameView, Observer {
             Soldier cur = controller.getCurrentSoldier();
             Soldier target = getSelectedTarget();
             IComponent w = getSelectedWeapon(cur);
-            if (cur != null && target != null && w != null)
+            if (cur != null && target != null && w != null && !usedItemNames.contains(w.getName())) {
                 controller.playerUseItem(cur, target, w);
+                usedItemNames.add(w.getName()); // Đánh dấu đã dùng tên item này
+                refresh(); // Cập nhật lại UI để ẩn item đã dùng
+            }
         });
 
         effectBtn.addActionListener(e -> {
@@ -135,7 +138,6 @@ public class MainFrame extends JFrame implements GameView, Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        // Nếu có log mới
         if (arg instanceof String log) {
             logArea.append(log + "\n");
             logArea.setCaretPosition(logArea.getDocument().getLength());
@@ -162,6 +164,18 @@ public class MainFrame extends JFrame implements GameView, Observer {
             for (IComponent ic : getAllEquipmentsRecursive(cur.getEquipmentList())) {
                 itemBox.addItem(ic.getName());
             }
+        }
+
+        String selectedItemName = (String) itemBox.getSelectedItem();
+        boolean enable = cur != null && isPlayer && !controller.isCombatEnded();
+        boolean itemAvailable = selectedItemName != null && !usedItemNames.contains(selectedItemName);
+        itemBtn.setEnabled(enable && itemAvailable);
+        if (!itemAvailable && selectedItemName != null) {
+            itemBtn.setToolTipText("Vật phẩm này đã được sử dụng, không thể dùng lại");
+            itemBtn.setText("Đã dùng");
+        } else {
+            itemBtn.setToolTipText("Dùng vật phẩm này lên mục tiêu");
+            itemBtn.setText("Dùng vật phẩm");
         }
 
         // Cập nhật danh sách mục tiêu phù hợp với vật phẩm đang chọn
@@ -192,7 +206,6 @@ public class MainFrame extends JFrame implements GameView, Observer {
         enemyPanel.repaint();
 
         // Enable/disable nút theo trạng thái trận đấu
-        boolean enable = cur != null && isPlayer && !controller.isCombatEnded();
         attackBtn.setEnabled(enable);
         itemBtn.setEnabled(enable);
         effectBtn.setEnabled(enable);

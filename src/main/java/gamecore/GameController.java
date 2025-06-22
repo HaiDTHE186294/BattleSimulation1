@@ -29,7 +29,6 @@ import java.util.Observable;
 public class GameController extends Observable {
     private CombatManager cm;
     private GameView view;
-    private final BgmPlayer bgmPlayer = new BgmPlayer();
     private List<Soldier> playerTeam;
     private final String enemyTeamId;
 
@@ -64,6 +63,7 @@ public class GameController extends Observable {
         Map<String, IComponent> equipmentMap = loadEquipmentMap("equipment.json");
 
         List<Soldier> enemyTeam = loadEnemyTeam(enemyTeamId);
+        BgmPlayer bgmPlayer = BgmPlayer.getInstance();
         bgmPlayer.play("battle.wav", true);
 
         this.cm = new CombatManager(this.playerTeam, enemyTeam, enemyTeamId);

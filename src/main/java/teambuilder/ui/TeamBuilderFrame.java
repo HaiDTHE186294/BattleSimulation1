@@ -54,6 +54,11 @@ public class TeamBuilderFrame extends JFrame {
         model.getAllEquipment().forEach(equipListModel::addElement);
 
         addBtn.addActionListener(e -> {
+            if (chosenListModel.size() >= 3) {
+                // Giới hạn số lượng thành viên trong đội
+                JOptionPane.showMessageDialog(this, "Chỉ được chọn tối đa 3 thành viên cho đội!", "Giới hạn", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
             MemberDef selected = memberList.getSelectedValue();
             if (selected == null) return;
             controller.addMember(selected);
@@ -71,6 +76,12 @@ public class TeamBuilderFrame extends JFrame {
             Soldier soldier = chosenList.getSelectedValue();
             IComponent equip = equipList.getSelectedValue();
             if (soldier == null || equip == null) return;
+            List<IComponent> equips = model.getSoldierEquipmentMap().get(soldier.getName());
+            //Giới hạn mỗi thành viên chỉ được trang bị tối đa n vật phẩm
+            if (equips != null && equips.size() >= 1) {
+                JOptionPane.showMessageDialog(this, "Mỗi thành viên chỉ được trang bị tối đa 1 vật phẩm!", "Giới hạn", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
             controller.assignEquipment(soldier, equip);
             JOptionPane.showMessageDialog(this, "Đã gán " + equip.getName() + " cho " + soldier.getName());
         });

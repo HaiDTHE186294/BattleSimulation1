@@ -2,6 +2,8 @@ package dialogue.ui;
 
 import dialogue.controller.DialogueController;
 import dialogue.service.DialogueService;
+import utils.BgmPlayer;
+
 import javax.swing.WindowConstants;
 import javax.swing.*;
 import java.awt.*;
@@ -12,6 +14,7 @@ public class DialogueAppSwing {
     private JLabel speakerLabel;
     private JTextArea dialogueText;
     private JPanel optionsPanel;
+
 
     /**
      * Khởi tạo UI hội thoại với controller và service có sẵn (KHÔNG tự nạp lại JSON, không tạo DialogueService mới!)
@@ -44,9 +47,7 @@ public class DialogueAppSwing {
 
             uiService = new DialogueUIServiceSwing(speakerLabel, dialogueText, optionsPanel, controller);
             service.addObserver(uiService);
-
             controller.start(startDialogueId);
-
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         } catch (Exception e) {
@@ -54,6 +55,8 @@ public class DialogueAppSwing {
             JOptionPane.showMessageDialog(null, "Failed to start application: " + e.getMessage());
         }
     }
+
+
 
     /**
      * KHÔNG dùng main này để chạy thật! Chỉ để test độc lập UI, không liên kết với game.
