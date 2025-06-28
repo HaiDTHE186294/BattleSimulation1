@@ -1,6 +1,7 @@
 package equipment.service;
 
 import effect.model.BuffEffect;
+import effect.model.BurnEffect;
 import effect.service.EffectService;
 import equipment.model.Armor;
 import equipment.model.IComponent;
@@ -80,7 +81,7 @@ public class EquipmentService {
     }
 
     public static boolean isAttackItem(IComponent item) {
-        return anyEffectMatches(item, e -> !(e instanceof BuffEffect));
+        return anyEffectMatches(item, e -> !(e instanceof BurnEffect));
     }
 
     private static boolean anyEffectMatches(IComponent item, Predicate<Effect> predicate) {

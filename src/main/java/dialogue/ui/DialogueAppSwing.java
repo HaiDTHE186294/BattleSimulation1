@@ -24,7 +24,7 @@ public class DialogueAppSwing {
         try {
             JFrame frame = new JFrame("Hội thoại Swing");
             frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            frame.setSize(480, 340);
+            frame.setSize(780, 440);
 
             speakerLabel = new JLabel();
             dialogueText = new JTextArea(6, 32);

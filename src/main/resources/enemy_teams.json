@@ -57,12 +57,12 @@
     "members": [
       {
         "name": "Troll",
-        "hp": 120,
+        "hp": 180,
         "status": "ALIVE",
-        "atk": 18,
-        "def": 8,
+        "atk": 40,
+        "def": 18,
         "equipment": [
-          { "type": "Weapon", "name": "Club", "displayName": "Chùy", "power": 8 }
+          { "type": "Weapon", "name": "Club", "displayName": "Chùy", "power": 10 }
         ]
       }
     ]
@@ -271,4 +271,5 @@
       }
     ]
   }
+
 ]

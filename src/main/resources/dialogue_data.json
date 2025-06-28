@@ -5,22 +5,22 @@
     "text": "Xin cứu với! Có quái vật đang tấn công làng chúng tôi!",
     "options": [
       { "text": "Bình tĩnh, tôi sẽ giúp các bạn.", "nextDialogueId": "prepare_battle" },
-      { "text": "Tôi không quan tâm.", "nextDialogueId": "ignore_village" }
+      { "text": "Nhìn mặt tôi xem có tí quan tâm nào không", "nextDialogueId": "ignore_village" }
     ]
   },
   {
     "id": "ignore_village",
     "speaker": "Villager",
-    "text": "Xin anh mà! Nếu anh không giúp, chúng tôi sẽ bị tiêu diệt mất!",
+    "text": "Xin anh mà! Nếu anh không giúp, chúng tôi sẽ chết mất! Chúng tôi nguyện trả bất cứ giá nào!",
     "options": [
-      { "text": "Được rồi, tôi sẽ giúp.", "nextDialogueId": "prepare_battle" },
-      { "text": "Tôi không phải anh hùng.", "nextDialogueId": "end_no_help" }
+      { "text": "Người như ta mà còn cần những thứ tục vật ấy sao. Tiền tài vật chất chỉ là vật ngoài thân, để lại đây rồi đi đi.", "nextDialogueId": "prepare_battle" },
+      { "text": "Vạn vật đều có số kiếp, mạng các ngươi cũng là mạng, mạng thú vật cũng là mạng, tại sao ta phải cứu các ngươi?", "nextDialogueId": "end_no_help" }
     ]
   },
   {
     "id": "end_no_help",
     "speaker": "Villager",
-    "text": "Chúng tôi không biết phải làm sao nữa...",
+    "text": "Aaaa shiba...",
     "options": []
   },
   {
@@ -28,8 +28,8 @@
     "speaker": "Hero",
     "text": "Quái vật nào đang tấn công làng các bạn?",
     "options": [
-      { "text": "Một bầy sói hoang, chúng rất hung dữ!", "nextDialogueId": "wolf_warning" },
-      { "text": "Tôi không biết, chỉ thấy bóng chúng rất lớn.", "nextDialogueId": "mystery_monster" }
+      { "text": "Một bầy hạo thiên khuyển, chúng rất hung dữ!", "nextDialogueId": "wolf_warning" },
+      { "text": "Tôi không biết, chỉ thấy mây đen kín trời, tiếng gầm vang tận trời xanh.", "nextDialogueId": "mystery_monster" }
     ]
   },
   {
@@ -38,7 +38,7 @@
     "text": "Chúng tôi nghe tiếng sói tru mỗi đêm. Xin hãy đánh bại chúng!",
     "options": [
       {
-        "text": "Tôi sẽ tiêu diệt bầy sói.",
+        "text": "Đảm bảo đủ 7 món.",
         "nextDialogueId": "start_battle_wolf",
         "actions": [ { "type": "startBattle", "battleId": "wolf_pack" } ]
       }
@@ -50,7 +50,7 @@
     "text": "Có thể là con Troll khổng lồ trong rừng...",
     "options": [
       {
-        "text": "Tôi sẽ đối đầu với Troll!",
+        "text": "Hơi khó ăn, phải thêm tiền!",
         "nextDialogueId": "start_battle_troll",
         "actions": [ { "type": "startBattle", "battleId": "troll_solo" } ]
       }
@@ -82,7 +82,7 @@
     "text": "Không! Anh đã thất bại... Bầy sói vẫn hoành hành trong làng...",
     "options": [
       {
-        "text": "Tôi sẽ quay lại và thử lại!",
+        "text": "Ta không thua chúng nó, ta thua chính là lòng nhân từ của ta!",
         "nextDialogueId": "start_battle_wolf",
         "actions": [ { "type": "startBattle", "battleId": "wolf_pack" } ]
       }
@@ -94,9 +94,17 @@
     "text": "Cảm ơn anh đã cứu mọi người... Nhưng xin đừng vào rừng sâu phía Tây.",
     "options": [
       { "text": "Tại sao vậy?", "nextDialogueId": "girl_warning" },
-      { "text": "Tôi sẽ đi nếu muốn.", "nextDialogueId": "go_west_forest" }
+      { "text": "Đa tạ cô nương đã nhắc nhở, tại hạ tự có chừng mực.", "nextDialogueId": "go_west_forest" }
     ]
   },
+    {
+        "id": "go_west_forest",
+        "speaker": "Narration",
+        "text": "“Một niệm buông xuống, trời đất thênh thang.” Bạn chạy trối chết",
+        "options": [
+
+        ]
+    },
   {
     "id": "girl_warning",
     "speaker": "Mysterious Girl",
@@ -109,13 +117,13 @@
   {
     "id": "end_girl_trust",
     "speaker": "Mysterious Girl",
-    "text": "Cảm ơn anh... Em mong anh sẽ không phải đau lòng như em.",
+    "text": "... Em mong anh sẽ không phải đau lòng như em...",
     "options": []
   },
   {
     "id": "girl_reveal",
-    "speaker": "Mysterious Girl",
-    "text": "Em từng là Anna, con gái của trưởng làng. Nhưng vì tình yêu với một kẻ bị nguyền rủa, em đã mất tất cả...",
+    "speaker": "Anna",
+    "text": "Em từng là Anna, con gái của trưởng làng. Nhưng vì cứu sinh mạng của em, người em yêu đã biến thành quái vật...",
     "options": [
       { "text": "Em yêu thằng nào cơ?", "nextDialogueId": "love_reveal" },
       { "text": "Không quan tâm, có quái là anh thịt hết.", "nextDialogueId": "go_west_forest" }
@@ -123,19 +131,19 @@
   },
   {
     "id": "love_reveal",
-    "speaker": "Mysterious Girl",
+    "speaker": "Anna",
     "text": "Anh ấy chính là Troll mà anh sắp đối đầu. Anh ấy từng là người, bị biến thành quái vật vì bảo vệ em.",
     "options": [
-      { "text": "Nghe là thấy kích thích rồi.", "nextDialogueId": "girl_plead" }
+      { "text": "Quả là một đấng anh hùng đáng để kết giao. Nàng đừng lo ta sẵn lòng giải thoát cho anh ấy.", "nextDialogueId": "girl_plead" }
     ]
   },
   {
     "id": "girl_plead",
-    "speaker": "Mysterious Girl",
+    "speaker": "Anna",
     "text": "Nếu có thể, xin hãy tha thứ cho anh ấy. Em nguyện làm trâu ngựa báo đáp anh.",
     "options": [
-      { "text": "Cô nương yên tâm, quân tử động khẩu bất động thủ.", "nextDialogueId": "pre_battle_troll" },
-      { "text": "Miếng ngon nhớ lâu, đòn đau nhớ mãi.", "nextDialogueId": "start_battle_troll", "actions": [ { "type": "startBattle", "battleId": "troll_solo" } ] }
+      { "text": "Tất nhiên rồi, cô nương yên tâm, quân tử động khẩu bất động thủ. Đời này ta ghét nhất là sát sanh", "nextDialogueId": "pre_battle_troll" },
+      { "text": "Trâu ngựa à, cô nương nặng lời rồi, ta nào phải là người như vậy.", "nextDialogueId": "start_battle_troll", "actions": [ { "type": "startBattle", "battleId": "troll_solo" } ] }
     ]
   },
   {
@@ -149,7 +157,7 @@
   {
     "id": "troll_speaks",
     "speaker": "Troll",
-    "text": "Grrr... Đau đớn... Giận dữ... Nhưng... mùi hương này... Ta nhớ ra rồi... Anna...",
+    "text": "Grrr... Đau đớn... Giận dữ... hít hà... mùi hương này... Ta nhớ ra rồi... Anna...",
     "options": [
       { "text": "Troll, Anna đã từng yêu ngươi!", "nextDialogueId": "troll_cries" }
     ]
@@ -159,25 +167,25 @@
     "speaker": "Troll",
     "text": "Ta... không muốn làm hại ai nữa... Nhưng ta không kiểm soát được bản thân!",
     "options": [
-      { "text": "Không quan tâm, vào đây.", "nextDialogueId": "start_battle_troll", "actions": [ { "type": "startBattle", "battleId": "troll_solo" } ] },
+      { "text": "Nói ít thôi, ta đang vội đi cày.", "nextDialogueId": "start_battle_troll", "actions": [ { "type": "startBattle", "battleId": "troll_solo" } ] },
       { "text": "Cho ngươi ra chiêu trước, chấp ngươi 2 tay", "nextDialogueId": "troll_struggles" }
     ]
   },
   {
     "id": "troll_struggles",
     "speaker": "Troll",
-    "text": " Thằng khốnnnnn ... RAAAAA!",
+    "text": " Thằng khốnnnnn ...Mày nói rồi nhé! Đứng im đấy!",
     "options": [
-      { "text": "Nói đùa thôi, thú vật mới chấp, quân tử ra đòn trước.", "nextDialogueId": "start_battle_troll", "actions": [ { "type": "startBattle", "battleId": "troll_solo" } ] }
+      { "text": "Nói đùa thôi ngốc ạ, thú vật mới chấp, quân tử tiên trảm thảo, hậu trừ căn.", "nextDialogueId": "start_battle_troll", "actions": [ { "type": "startBattle", "battleId": "troll_solo" } ] }
     ]
   },
   {
     "id": "troll_soloWin",
     "speaker": "Mysterious Girl",
-    "text": "Anh ấy... đã ra đi. Anh có thể tha thứ cho em không?",
+    "text": "Anh ấy... đã ra đi. Anh ấy có thể tha thứ cho em không?",
     "options": [
       { "text": "Em không có lỗi, em xứng đáng được hạnh phúc với anh.", "nextDialogueId": "girl_cry" },
-      { "text": "Tôi cũng từng mất người thân, chúng ta giống nhau.", "nextDialogueId": "girl_cry" }
+      { "text": "Không tha đâu nhưng mà tôi cũng dang thiếu người yêu như em, vậy mình giống nhau rồi.", "nextDialogueId": "girl_cry" }
     ]
   },
   {
@@ -186,7 +194,7 @@
     "text": "Anh đã thất bại... Anh ấy vẫn là nỗi đau của em.",
     "options": [
       {
-        "text": "Tôi sẽ quay lại và thử lại!",
+        "text": "Yên tâm anh ghim thằng này rồi, không phải thất bại mà là anh cho nó một cơ hội để giác ngộ!",
         "nextDialogueId": "start_battle_troll",
         "actions": [ { "type": "startBattle", "battleId": "troll_solo" } ]
       }
@@ -204,7 +212,7 @@
   {
     "id": "end_sad_love2",
     "speaker": "Narration",
-    "text": "Dưới ánh hoàng hôn, tiếng khóc của Anna vang vọng mãi trong rừng. Người hùng ra đi, để lại sau lưng một trái tim tan vỡ và một hồn ma vẫn chưa được tha thứ...",
+    "text": "Dưới ánh hoàng hôn, tiếng khóc của Anna vang vọng mãi trong rừng. Người hùng ra đi, để lại sau lưng một trái tim tan vỡ chưa được tha thứ...",
     "options": []
   },
   {
@@ -215,10 +223,297 @@
       { "text": "Vãi ***.", "nextDialogueId": "end_end_sad_love1" }
     ]
   },
+  {
+    "id": "end_end_sad_love1",
+    "speaker": "Hero",
+    "text": " Ta có một cách để nàng quên được quá khứ, đó là ta sẽ cho nàng một cái kết đẹp.",
+    "options": [
+      { "text": "Lời nói đến sau, kiếm chiêu đến trước, gọn gàng sạch sẽ mới là tác phong của bậc quân tử", "nextDialogueId": "end_end_sad_love2" }
+    ]
+  },
     {
-        "id": "end_end_sad_love1",
+        "id": "end_end_sad_love2",
         "speaker": "Narration",
-        "text": "Người hùng rời khỏi rừng, để lại Anna một mình với nỗi đau và những kỷ niệm không thể xóa nhòa. Câu chuyện của họ sẽ mãi là một bí mật trong lòng rừng sâu.",
+        "text": "Người hùng rời khỏi khu rừng, tiếc thương cho người con gái nguyện ra đi bên người mình yêu. Câu chuyện của họ sẽ mãi là một bí mật trong lòng rừng sâu.",
+        "options": [
+          { "text": "Lừa tao à, kiếp sau chừa nhé.", "nextDialogueId": "after_troll" }
+        ]
+    },
+    {
+        "id": "end_game",
+        "speaker": "Narration",
+        "text": "END DEMO!",
         "options": []
-    }
+    },
+    {
+  "id": "after_troll",
+  "speaker": "Narration",
+  "text": "Sau trận chiến với Troll, khu rừng trở nên yên tĩnh lạ thường. Tuy nhiên, một làn sương mù dày đặc bắt đầu tràn xuống từ sườn núi phía Đông.",
+  "options": [
+    { "text": "Tiến về phía làn sương mù.", "nextDialogueId": "mist_encounter" },
+    { "text": "Quay lại báo tin cho dân làng.", "nextDialogueId": "village_report" }
+  ]
+},
+  {
+    "id": "mist_encounter",
+    "speaker": "Hero",
+    "text": "Sương mù này... có gì đó không ổn. Mình phải cảnh giác.",
+    "options": [
+      { "text": "Quan sát xung quanh.", "nextDialogueId": "mist_ambush" },
+      { "text": "Gọi lớn: Có ai ở đó không?", "nextDialogueId": "assassin_ambush" }
+    ]
+  },
+  {
+    "id": "mist_ambush",
+    "speaker": "Narration",
+    "text": "Từ trong làn sương, những bóng đen lặng lẽ xuất hiện. Một toán sát thủ đang ẩn nấp, chờ đợi thời cơ!",
+    "options": [
+      {
+        "text": "Chuẩn bị chiến đấu.",
+        "nextDialogueId": "start_battle_assassin",
+        "actions": [ { "type": "startBattle", "battleId": "assassin_squad" } ]
+      }
+    ]
+  },
+  {
+    "id": "assassin_ambush",
+    "speaker": "Assassin",
+    "text": "Ngươi to gan thật! Đến đây là sẽ không còn đường quay lại đâu.",
+    "options": [
+      {
+        "text": "Ai thuê các ngươi?",
+        "nextDialogueId": "assassin_talk"
+      },
+      {
+        "text": "Không nhiều lời, vào luôn đi!",
+        "nextDialogueId": "start_battle_assassin",
+        "actions": [ { "type": "startBattle", "battleId": "assassin_squad" } ]
+      }
+    ]
+  },
+  {
+    "id": "assassin_talk",
+    "speaker": "Assassin",
+    "text": "Tiếc là ngươi sẽ không sống để biết câu trả lời. Anh em, động thủ!",
+    "options": [
+      {
+        "text": "Chuẩn bị nghênh chiến.",
+        "nextDialogueId": "start_battle_assassin",
+        "actions": [ { "type": "startBattle", "battleId": "assassin_squad" } ]
+      }
+    ]
+  },
+  {
+    "id": "start_battle_assassin",
+    "speaker": "Hero",
+    "text": "Được, để xem các ngươi bản lĩnh tới đâu!",
+    "options": []
+  },
+  {
+    "id": "assassin_squadWin",
+    "speaker": "Assassin",
+    "text": "Không thể nào... Tại sao một mình ngươi lại mạnh như vậy...",
+    "options": [
+      { "text": "Nói, ai là kẻ chủ mưu?", "nextDialogueId": "assassin_reveal" }
+    ]
+  },
+  {
+    "id": "assassin_reveal",
+    "speaker": "Assassin",
+    "text": "Chúng ta chỉ là con tốt. Kẻ thực sự đứng sau là... Necromancer ở nghĩa địa phía Bắc...",
+    "options": [
+      { "text": "Nghĩa địa à? Được, ta sẽ đến đó.", "nextDialogueId": "go_to_cemetery" }
+    ]
+  },
+  {
+    "id": "assassin_squadLose",
+    "speaker": "Narration",
+    "text": "Bạn gục ngã giữa làn sương, những sát thủ biến mất như chưa từng tồn tại.",
+    "options": [
+      {
+        "text": "Thử lại.", "nextDialogueId": "start_battle_assassin", "actions": [ { "type": "startBattle", "battleId": "assassin_squad" } ]
+      }
+    ]
+  },
+  {
+    "id": "go_to_cemetery",
+    "speaker": "Hero",
+    "text": "Nghĩa địa phía Bắc... nơi đó chắc chắn không bình thường.",
+    "options": [
+      { "text": "Tiến vào nghĩa địa.", "nextDialogueId": "cemetery_entrance" }
+    ]
+  },
+  {
+    "id": "cemetery_entrance",
+    "speaker": "Narration",
+    "text": "Bạn lặng lẽ bước vào nghĩa địa. Không khí lạnh lẽo, từng luồng khí đen bay lượn quanh những bia mộ cũ kỹ.",
+    "options": [
+      { "text": "Đi sâu vào bên trong.", "nextDialogueId": "undead_ambush_intro" }
+    ]
+  },
+  {
+    "id": "undead_ambush_intro",
+    "speaker": "Necromancer",
+    "text": "Kẻ quấy rối giấc ngủ của ta, hãy chuẩn bị đối mặt với binh đoàn bất tử!",
+    "options": [
+      {
+        "text": "Ta không sợ ma quỷ!",
+        "nextDialogueId": "start_battle_undead",
+        "actions": [ { "type": "startBattle", "battleId": "undead_ambush" } ]
+      }
+    ]
+  },
+  {
+    "id": "start_battle_undead",
+    "speaker": "Hero",
+    "text": "Được, để xem xác sống của ngươi mạnh đến đâu!",
+    "options": []
+  },
+  {
+    "id": "undead_ambushWin",
+    "speaker": "Necromancer",
+    "text": "Không thể nào... Bọn xác sống của ta đã bị đánh bại...",
+    "options": [
+      { "text": "Đầu hàng đi!", "nextDialogueId": "necromancer_final" }
+    ]
+  },
+  {
+    "id": "necromancer_final",
+    "speaker": "Necromancer",
+    "text": "Ngươi nghĩ tiêu diệt ta là dễ sao? Ta chỉ là một phần nhỏ của bóng tối đang trỗi dậy khắp vùng đất này.",
+    "options": [
+      { "text": "Ngươi còn đồng bọn nào?", "nextDialogueId": "necromancer_hint" }
+    ]
+  },
+  {
+    "id": "necromancer_hint",
+    "speaker": "Necromancer",
+    "text": "Ở phía Nam, các phù thủy đang triệu hồi những thế lực hắc ám. Nếu muốn cứu vùng đất này, hãy ngăn chúng trước khi quá muộn.",
+    "options": [
+      { "text": "Lên đường về phía Nam.", "nextDialogueId": "to_witch_coven" }
+    ]
+  },
+  {
+    "id": "undead_ambushLose",
+    "speaker": "Necromancer",
+    "text": "Chỉ vậy thôi sao? Ngươi không xứng đáng chống lại bóng tối của ta!",
+    "options": [
+      { "text": "Không bỏ cuộc!", "nextDialogueId": "start_battle_undead", "actions": [ { "type": "startBattle", "battleId": "undead_ambush" } ] }
+    ]
+  },
+  {
+    "id": "to_witch_coven",
+    "speaker": "Narration",
+    "text": "Bạn tiến về phía Nam, nơi cánh rừng được bao phủ bởi một màn sương tím huyền bí. Tiếng cười ma mị vang vọng khắp nơi.",
+    "options": [
+      { "text": "Tiến sâu vào rừng phù thủy.", "nextDialogueId": "witch_encounter" }
+    ]
+  },
+  {
+    "id": "witch_encounter",
+    "speaker": "Witch",
+    "text": "Một vị khách không mời? Ngươi muốn gì ở đây?",
+    "options": [
+      { "text": "Ta đến để ngăn các ngươi gây hại cho vùng đất này.", "nextDialogueId": "witch_challenge" },
+      { "text": "Ta chỉ đi ngang qua, đừng để ta phải ra tay.", "nextDialogueId": "witch_warning" }
+    ]
+  },
+  {
+    "id": "witch_challenge",
+    "speaker": "Witch",
+    "text": "Ngông cuồng! Để xem bản lĩnh của ngươi tới đâu.",
+    "options": [
+      { "text": "Nhận lời thách đấu.", "nextDialogueId": "start_battle_mage", "actions": [ { "type": "startBattle", "battleId": "mage_coven" } ] }
+    ]
+  },
+  {
+    "id": "witch_warning",
+    "speaker": "Witch",
+    "text": "Nếu khôn hồn thì rời đi, nếu không... ngươi sẽ gia nhập đội quân linh hồn của ta!",
+    "options": [
+      { "text": "Được rồi, chiến luôn!", "nextDialogueId": "start_battle_mage", "actions": [ { "type": "startBattle", "battleId": "mage_coven" } ] }
+    ]
+  },
+  {
+    "id": "start_battle_mage",
+    "speaker": "Hero",
+    "text": "Thế giới này sẽ không còn chỗ cho tà ác!",
+    "options": []
+  },
+  {
+    "id": "mage_covenWin",
+    "speaker": "Sorcerer",
+    "text": "Chúng ta không thể ngăn nổi ngươi... Nhưng thế lực hắc ám vẫn chưa kết thúc đâu!",
+    "options": [
+      { "text": "Còn âm mưu nào nữa?", "nextDialogueId": "final_revelation" }
+    ]
+  },
+  {
+    "id": "final_revelation",
+    "speaker": "Witch",
+    "text": "Phía Đông, nơi hai nguyên tố đối nghịch đang va chạm, là cội nguồn của mọi hỗn loạn. Nếu dám, hãy thử sức!",
+    "options": [
+      { "text": "Đi về phía Đông.", "nextDialogueId": "elemental_intro" }
+    ]
+  },
+  {
+    "id": "mage_covenLose",
+    "speaker": "Witch",
+    "text": "Ngươi chỉ là một tên ngốc tự phụ. Thế giới này sẽ chìm trong bóng tối!",
+    "options": [
+      { "text": "Chơi lại.", "nextDialogueId": "start_battle_mage", "actions": [ { "type": "startBattle", "battleId": "mage_coven" } ] }
+    ]
+  },
+  {
+    "id": "elemental_intro",
+    "speaker": "Narration",
+    "text": "Bạn đến rìa thung lũng nơi lửa và nước giao tranh, hai thực thể khổng lồ hiện ra giữa cơn bão nguyên tố.",
+    "options": [
+      { "text": "Đối đầu với song nguyên tố.", "nextDialogueId": "start_battle_elemental", "actions": [ { "type": "startBattle", "battleId": "elemental_duo" } ] }
+    ]
+  },
+  {
+    "id": "start_battle_elemental",
+    "speaker": "Hero",
+    "text": "Dù là lửa hay nước, ta cũng sẽ vượt qua!",
+    "options": []
+  },
+  {
+    "id": "elemental_duoWin",
+    "speaker": "Narration",
+    "text": "Bạn đã cân bằng được cả hai nguyên tố. Bầu trời quang đãng, ánh sáng trở lại vùng đất.",
+    "options": [
+      { "text": "Kết thúc hành trình.", "nextDialogueId": "finale" }
+    ]
+  },
+  {
+    "id": "elemental_duoLose",
+    "speaker": "Narration",
+    "text": "Sức mạnh nguyên tố quá lớn, bạn gục ngã giữa biển lửa và nước cuộn trào.",
+    "options": [
+      { "text": "Không bỏ cuộc!", "nextDialogueId": "start_battle_elemental", "actions": [ { "type": "startBattle", "battleId": "elemental_duo" } ] }
+    ]
+  },
+  {
+    "id": "finale",
+    "speaker": "Narration",
+    "text": "Vùng đất đã được cứu rỗi, nhưng những thử thách mới vẫn còn chờ đợi phía trước. Hành trình của bạn chỉ mới bắt đầu...",
+    "options": [
+      { "text": "END GAME", "nextDialogueId": "end_part2" }
+    ]
+  },
+  {
+    "id": "end_part2",
+    "speaker": "Narration",
+    "text": "END PHẦN 2 - Cảm ơn bạn đã chơi bản DEMO!",
+    "options": []
+  },
+  {
+    "id": "village_report",
+    "speaker": "Villager",
+    "text": "Cảm ơn anh! Nhưng chúng tôi nghe nói gần đây có nhiều người mất tích về phía Đông làng...",
+    "options": [
+      { "text": "Đi điều tra phía Đông.", "nextDialogueId": "mist_encounter" }
+    ]
+  }
 ]

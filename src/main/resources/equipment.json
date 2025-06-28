@@ -61,12 +61,12 @@
     "displayName": "Đá may mắn (bọc Gậy)",
     "wrapped": {
       "type": "Weapon",
-      "id": "staff",
-      "name": "Staff",
+      "id": "axe",
+      "name": "axe",
       "displayName": "Gậy",
-      "power": 0,
+      "power": 7,
       "effects": [
-        { "type": "BuffEffect", "name": "Wisdom", "duration": 6, "bonusAtk": 2, "bonusDef": 1 }
+        { "type": "BurnEffect", "duration": 6, "damagePerTurn": 4 }
       ]
     }
   }
