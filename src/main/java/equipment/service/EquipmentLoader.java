@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import effect.model.BuffEffect;
 import effect.model.BurnEffect;
+import effect.model.HealEffect;
 import effect.model.Effect;
 import effect.service.EffectService;
 import equipment.model.Armor;
@@ -33,6 +34,7 @@ public class EquipmentLoader {
         public Integer bonusAtk;
         public Integer bonusDef;
         public Integer damagePerTurn;
+        public Integer healQuantity;
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -138,6 +140,7 @@ public class EquipmentLoader {
             Effect effect = parseEffect(edef);
             if (effect != null) {
                 effects.add(effect.copyEffect());
+                System.out.println(effect.toString());
             }
         }
         return effects;
@@ -160,6 +163,11 @@ public class EquipmentLoader {
                         def.duration != null ? def.duration : 1,
                         def.bonusAtk != null ? def.bonusAtk : 0,
                         def.bonusDef != null ? def.bonusDef : 0
+                );
+            case "HealEffect":
+                return new HealEffect(
+                        def.duration != null ? def.duration : 1,
+                        def.healQuantity != null ? def.healQuantity : 1
                 );
             default:
                 return null;

@@ -2,6 +2,7 @@ package equipment.service;
 
 import effect.model.BuffEffect;
 import effect.model.BurnEffect;
+import effect.model.HealEffect;
 import effect.service.EffectService;
 import equipment.model.Armor;
 import equipment.model.IComponent;
@@ -59,7 +60,7 @@ public class EquipmentService {
         // Kích hoạt action của item
         item.action(target);
 
-        // Áp dụng effect từ vũ khí
+        // �?p dụng effect từ vũ khí
         if (item instanceof Weapon weapon && effectService != null) {
             for (Effect effect : weapon.getEffects()) {
                 if (effect != null) {
@@ -77,8 +78,9 @@ public class EquipmentService {
     }
 
     public static boolean isBuffItem(IComponent item) {
-        return anyEffectMatches(item, e -> e instanceof BuffEffect);
+        return (item != null && anyEffectMatches(item, e -> e instanceof BuffEffect) || anyEffectMatches(item, e -> e instanceof HealEffect));
     }
+
 
     public static boolean isAttackItem(IComponent item) {
         return anyEffectMatches(item, e -> !(e instanceof BurnEffect));

@@ -51,14 +51,15 @@
     "power": 0,
     "effects": [
       { "type": "BuffEffect", "name": "Bless", "duration": 3, "bonusAtk": 1, "bonusDef": 3 },
-      { "type": "BuffEffect", "name": "Divine Shield", "duration": 6, "bonusAtk": 0, "bonusDef": 5 }
+      { "type": "BuffEffect", "name": "Divine Shield", "duration": 6, "bonusAtk": 0, "bonusDef": 5 },
+      { "type": "HealEffect", "name": "SmallHeal", "duration": 1, "healQuantity": 10 }
     ]
   },
   {
     "type": "LuckyStone",
     "id": "lucky_staff",
     "name": "LuckyStone",
-    "displayName": "Đá may mắn (bọc Gậy)",
+    "displayName": "Da may man",
     "wrapped": {
       "type": "Weapon",
       "id": "axe",

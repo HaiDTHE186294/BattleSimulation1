@@ -36,5 +36,10 @@
     "type": "BurnEffect",
     "duration": 3,
     "damagePerTurn": 2
+  },
+  {
+    "type": "HealEffect",
+    "duration": 1,
+    "healQuantity": 10
   }
 ]
