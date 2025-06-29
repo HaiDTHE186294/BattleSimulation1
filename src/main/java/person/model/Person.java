@@ -2,13 +2,13 @@ package person.model;
 import effect.model.Effect;
 import observer.GameObserver;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public abstract class Person {
     private final String name;
     private int health;
     private PersonStatus status;
+    private int baseHealth; // Giả sử máu tối đa là 100
 
 
     private List<GameObserver> observers = new ArrayList<>();
@@ -19,6 +19,7 @@ public abstract class Person {
         this.name = name;
         this.health = health;
         this.status = status;
+        this.baseHealth = health; // Giả sử máu tối đa là 100
     }
 
     // Observer registration
@@ -57,13 +58,13 @@ public abstract class Person {
         notifyHealthChanged();
     }
 
-    public void heal(int amount) {
+    public void takeHeal(int amount) {
         this.health += amount;
         if (health <= 0) {
             this.status = PersonStatus.DEAD;
             System.out.println(name + " dead.");
-        } else if (health > 100) {
-            this.health = 100; // Giới hạn máu tối đa
+        } else if (health > baseHealth) {
+            this.health = baseHealth; // Giới hạn máu tối đa
             this.status = PersonStatus.ALIVE;
             System.out.println(name + " healed. Remain: " + health);
         } else {

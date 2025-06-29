@@ -15,7 +15,7 @@ public abstract class DialogueController {
         playBgmForDialogue(dialogueId);
         service.startDialogue(dialogueId);
     }
-
+//Test triển khai phương thức playBgmForDialogue
     private void playBgmForDialogue(String dialogueId) {
         String bgmPath;
         switch (dialogueId) {

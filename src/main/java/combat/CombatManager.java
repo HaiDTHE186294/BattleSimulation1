@@ -35,7 +35,6 @@ public class CombatManager {
         return null;
     }
 
-    // Chỉ chuyển lượt, không xử lý logic hiệu ứng, tấn công, dùng item ở đây
     public void endTurn() {
         currentSoldier = null;
         currentTurnIndex++;

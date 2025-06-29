@@ -113,17 +113,11 @@ public class Soldier extends Person {
         return baseAtk;
     }
 
-    public void setBaseAtk(int baseAtk) {
-        this.baseAtk = baseAtk;
-    }
 
     public int getBaseDef() {
         return baseDef;
     }
 
-    public void setBaseDef(int baseDef) {
-        this.baseDef = baseDef;
-    }
 
     public GameObserver[] getObservers() {
         return observers.toArray(new GameObserver[0]);
@@ -140,7 +134,6 @@ public class Soldier extends Person {
                 .toList();
     }
 
-    // Trong person.model.Soldier.java
     @Override
     public String toString() {
         return String.format("%s (HP:%d, ATK:%d, DEF:%d)",

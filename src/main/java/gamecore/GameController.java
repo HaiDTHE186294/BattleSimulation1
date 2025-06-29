@@ -236,4 +236,5 @@ public class GameController extends Observable {
     public boolean isAttackItem(IComponent item) {
         return EquipmentService.isAttackItem(item);
     }
+
 }
